@@ -1,0 +1,17 @@
+---
+layout: default
+title: Blog
+permalink: /blog/
+order: 5
+---
+<div class="container mx-auto px-2">
+
+  {% include page_heading.html %}
+
+  <div class="py-2">
+    {% for post in site.posts %}
+      {% include post_block.html %}
+    {% endfor %}
+  </div>
+
+</div>

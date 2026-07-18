@@ -1,0 +1,24 @@
+---
+layout: default
+---
+<article class="container mx-auto px-2">
+
+  {% include page_heading.html %}
+
+  {% if page.tags %}
+  <div class="tag-list mb-4">
+    {% for tag in page.tags %}<span>{{ tag }}</span>{% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="prose mb-4 py-2">
+    {{ content }}
+  </div>
+
+  {% if page.link %}
+  <p><a class="link-primary" href="{{ page.link }}" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a></p>
+  {% endif %}
+
+  <p><a class="link-primary" href="{{ '/projects/' | prepend: site.baseurl }}">&larr; Back to all projects</a></p>
+
+</article>

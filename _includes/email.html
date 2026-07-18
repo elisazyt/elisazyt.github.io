@@ -1,0 +1,6 @@
+{% assign email_address_size = site.email_address | size %}
+<a href="{% if email_address_size == 0 %}#{% else %}mailto:{{ site.email_address }}{% endif %}" title="Send me an email" class="link-social block">
+  <svg height="32" class="header-social" version="1.1" width="32" viewBox="0 0 16 16" aria-hidden="true">
+    <path d="M0 3v10c0 0.55 0.45 1 1 1h14c0.55 0 1-0.45 1-1V3c0-0.55-0.45-1-1-1H1c-0.55 0-1 0.45-1 1zM14.4 3L8 8.4 1.6 3h12.8zM1 12V4.1l6.68 5.57c0.19 0.16 0.45 0.16 0.64 0L15 4.1V12H1z"/>
+  </svg>
+</a>

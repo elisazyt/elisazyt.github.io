@@ -1,0 +1,25 @@
+---
+layout: default
+title: Projects
+permalink: /projects/
+order: 3
+---
+<div class="container mx-auto px-2">
+
+  {% include page_heading.html %}
+
+  <div class="card-grid mb-4 py-2">
+    {% for item in site.projects %}
+    <a class="card block no-underline" href="{{ item.url | prepend: site.baseurl }}">
+      <h3 class="mb-1">{{ item.title }}</h3>
+      <p class="mb-1">{{ item.description }}</p>
+      {% if item.tags %}
+      <div class="tag-list">
+        {% for tag in item.tags %}<span>{{ tag }}</span>{% endfor %}
+      </div>
+      {% endif %}
+    </a>
+    {% endfor %}
+  </div>
+
+</div>
