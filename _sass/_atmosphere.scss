@@ -1,0 +1,58 @@
+// Ambient blurred background, adapted from jvboid.dev's ".atmosphere" clouds
+// layer (src/app/globals.css). His version blurs a single ink tone across
+// 5 radial gradients on top of a separate theme-aware "sky" gradient; this
+// is a simplified single-layer version using our own palette colors across
+// the 5 blobs instead, so it reads as pastel/multi-color without needing a
+// separate sky layer or a dark/light toggle to key off of.
+//
+// SAVED SNAPSHOT (before the "disperse colors more evenly" pass) — to
+// revert, restore these exact values in _theme-light.scss and below:
+//   $bg-flat: #F0EBE6;
+//   $card-bg: #EEE9E1;
+//   $blob-peach: #FBECDE;
+//   $blob-blue: #D8E3E7;
+//   $blob-pink: #EACFD6;
+//   $blob-lavender: #DDD2E6;
+//   $blob-periwinkle: #C9C6E8;
+//   .atmosphere::before background (7 stops):
+//     radial-gradient(48% 42% at 12% 15%, rgba($blob-periwinkle, 0.76), transparent 72%),
+//     radial-gradient(44% 40% at 85% 10%, rgba($blob-blue, 0.85), transparent 72%),
+//     radial-gradient(50% 46% at 50% 42%, rgba($blob-lavender, 0.71), transparent 74%),
+//     radial-gradient(46% 40% at 80% 60%, rgba($blob-peach, 0.76), transparent 72%),
+//     radial-gradient(44% 38% at 15% 68%, rgba($blob-blue, 0.66), transparent 72%),
+//     radial-gradient(48% 44% at 50% 92%, rgba($blob-pink, 0.56), transparent 74%),
+//     radial-gradient(42% 38% at 90% 88%, rgba($blob-periwinkle, 0.66), transparent 72%);
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: $color-background; // the flat base color the blurred blobs sit on top of
+}
+
+.atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(48% 42% at 12% 15%, rgba($blob-periwinkle, 0.65), transparent 72%),
+    radial-gradient(44% 40% at 85% 10%, rgba($blob-peach, 0.5), transparent 72%),
+    radial-gradient(38% 34% at 45% 35%, rgba($blob-pink, 0.4), transparent 74%),
+    radial-gradient(46% 40% at 80% 55%, rgba($blob-blue, 0.75), transparent 72%),
+    radial-gradient(44% 38% at 15% 65%, rgba($blob-lavender, 0.6), transparent 72%),
+    radial-gradient(46% 42% at 55% 90%, rgba($blob-peach, 0.45), transparent 74%),
+    radial-gradient(42% 38% at 90% 85%, rgba($blob-periwinkle, 0.55), transparent 72%),
+    radial-gradient(34% 30% at 25% 40%, rgba($blob-pink, 0.35), transparent 72%);
+  filter: blur(90px);
+  animation: atmosphere-drift 72s ease-in-out infinite alternate;
+}
+
+@keyframes atmosphere-drift {
+  from {
+    transform: translate3d(-6%, -4%, 0) scale(1) rotate(-3deg);
+  }
+  to {
+    transform: translate3d(7%, 5%, 0) scale(1.14) rotate(4deg);
+  }
+}

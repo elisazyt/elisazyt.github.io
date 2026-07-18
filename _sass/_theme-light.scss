@@ -9,22 +9,47 @@ $gray-lighter: #F5F5F5;
 $white: #fff;
 $burgundy: #B54545;
 
+// Warm neutral palette
+$cream: #F2E9D8;       // (unused as card bg now, kept for reference)
+$cream-light: #FFF7EC; // (unused as page bg now, kept for reference)
+$tan: #D9C6B3;         // borders
+$blush: #EBCFC4;       // soft fill (tag pills)
+$pink-dark: #C9A3A3;   // accent (links, hover)
+$pink-bright: #E68CC6; // pop highlight
+
+// Flat page background (no blur) — warm off-white/cream-gray rather than
+// a flat technical gray
+$bg-flat: #F0EBE6;
+
+// Card / box background — lightened and slightly less saturated for a
+// crisper, cleaner cream instead of a dingy/aged one
+$card-bg: #EEE9E1;
+
+// Atmosphere blob colors — pink pushed more saturated/rosy so it reads
+// distinctly from lavender/periwinkle instead of blending together; peach
+// pulled slightly less yellow so it doesn't read as an isolated "yellow" spot
+$blob-peach: #F5DFCF;      // warm peach, softened from the more yellow #FBECDE
+$blob-blue: #D8E3E7;       // cool blue
+$blob-pink: #E6B9C9;       // more saturated rose-pink, distinct from lavender
+$blob-lavender: #D6CEEA;   // shifted slightly more blue-purple, distinct from pink
+$blob-periwinkle: #C9C6E8; // blue-violet, between blue and lavender
+
 // Config
-$color-background: $white !default;
+$color-background: $bg-flat !default;
 $color-foreground: $black !default;
 $color-title: $black !default;
 $color-body-text: $black !default;
 $color-text-accent: $gray-dark !default;
 $color-code: $gray-dark !default;
 $color-nav-link: $black !default;
-$color-primary-link: $black !default;
-$color-primary-underline: $gray !default;
-$color-border: $gray-light !default;
+$color-primary-link: $pink-dark !default;
+$color-primary-underline: $pink-dark !default;
+$color-border: $tan !default;
 
-$color-card-background: $gray-lighter !default;
-$color-accent: $black !default;
-$color-accent-bright: $gray-dark !default;
-$color-tag-background: $gray-lighter !default;
+$color-card-background: $card-bg !default;
+$color-accent: $pink-dark !default;
+$color-accent-bright: $pink-bright !default;
+$color-tag-background: $blush !default;
 
 
 // Import sass partials (used in all themes)
@@ -34,5 +59,6 @@ $color-tag-background: $gray-lighter !default;
         "components",
         "utilities",
         "cards",
-        "sections"
+        "sections",
+        "atmosphere"
 ;
