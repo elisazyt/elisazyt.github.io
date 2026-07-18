@@ -1,0 +1,14 @@
+# The teaser cards on the homepage. Add/remove/reorder entries as your
+# site's sections change — no HTML editing needed.
+- title: "about"
+  description: "Who I am and what I care about."
+  url: "/about/"
+- title: "projects"
+  description: "Where I've worked, briefly."
+  url: "/experience/"
+- title: "dance"
+  description: "Work outside of code."
+  url: "/dance/"
+- title: "blog"
+  description: "Recent writing."
+  url: "/blog/"

@@ -1,0 +1,12 @@
+# The visible homepage intro (separate from _config.yml's `description`,
+# which stays a short single-line SEO/meta description). This one goes
+# through markdownify, so it can be as long or short as you want, with
+# real paragraphs, bold text, links, etc.
+intro: |
+  My past projects have spanned various domains, from automated code repair to synthetic data generation
+  and national security. Looking ahead, I’m excited to work towards a future where advances in AI capabilities
+  are contingent upon security and alignment with human interests.
+
+  When I’m not working, you’ll likely find me at the dance studio or cafe hopping :)
+
+  You can reach me at elisaz [at] mit [dot] edu.

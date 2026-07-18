@@ -13,8 +13,8 @@
 # you will see them accessed via {{ site.title }}, {{ site.github_repo }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Elisa Zhang
-description: Placeholder tagline — swap this for your own one-line intro.
+title: elisa zhang
+description:
 
 url: "https://elisazyt.github.io" # the base hostname & protocol
 baseurl: # leave blank since this is the user site
@@ -39,4 +39,4 @@ markdown: kramdown
 collections:
   projects:
     output: true
-    permalink: /projects/:path/
+    permalink: /experience/:path/

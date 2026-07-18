@@ -1,6 +1,7 @@
 .card-grid {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   margin: 0 (-$spacer-1);
 }
 
@@ -32,6 +33,40 @@
 
   p {
     color: $color-body-text;
+  }
+}
+
+.card-arrow {
+  display: inline-block;
+  font-size: 34px;
+  font-weight: bold;
+  color: $color-accent;
+  transition: transform 0.2s ease;
+}
+
+.card:hover .card-arrow {
+  transform: translateX(8px);
+}
+
+// Home's teaser cards — title on the left, arrow on the right, single row
+.card-centered {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  min-height: 0;
+  padding-top: $spacer-1;
+  padding-bottom: $spacer-1;
+
+  // 2x2 grid instead of the default 3-per-row — there are exactly 4 of
+  // these teaser cards on the homepage
+  @media (min-width: $breakpoint-lg) {
+    width: calc(50% - #{$spacer-2});
+  }
+
+  h3 {
+    margin-top: 0;
   }
 }
 
@@ -81,13 +116,21 @@
 
 .tag-list span {
   display: inline-block;
-  font-size: 12px;
+  font-size: 14px;
   color: $color-text-accent;
   background: $color-tag-background;
   border: 1px solid $color-border;
-  border-radius: 20px;
+  border-radius: 6px;
   padding: 2px 10px;
-  margin: 4px 4px 0 0;
+  margin: 6px 10px 0 0;
+}
+
+// Primary tag(s) — always rendered first in the list, same row, a touch
+// brighter/more saturated than the regular blush tags, but still a soft
+// pastel rose in keeping with the light theme (not the vivid $pink-bright).
+.tag-list span.tag-primary {
+  background: mix($pink-bright, $blush, 40%);
+  color: $color-title;
 }
 
 .art-placeholder {

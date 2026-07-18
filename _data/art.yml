@@ -1,0 +1,9 @@
+# Placeholder swatches for the Dance page's gallery grid. Replace title/
+# caption with real pieces, and swap .art-placeholder for a real <img> in
+# dance.html once you have photos.
+- title: "Piece One"
+  caption: "Placeholder caption — medium, year."
+- title: "Piece Two"
+  caption: "Placeholder caption — medium, year."
+- title: "Piece Three"
+  caption: "Placeholder caption — medium, year."

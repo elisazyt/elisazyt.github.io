@@ -1,5 +1,6 @@
 .prose-intro {
-  font-size: $prose-font-size;
+  font-size: 17px;
+  margin-top: 10px; // extra gap from the name block above, without touching in-paragraph line-height
   max-width: 32em;
 }
 
@@ -17,38 +18,66 @@ header {
 .hero-grid {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: stretch; // was center — so hero-image can match hero-text's height
   gap: $spacer-3;
+  margin-top: $spacer-4; // more breathing room above "elisa zhang" than the default mt-2 utility gave it
 }
 
 .hero-text {
   flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; // centers the title/intro/socials bundle against the image's full height, instead of sitting at the top
+
+  h1 {
+    margin-top: 0; // otherwise the global 1em heading margin pushes the name below the image's top edge
+    font-size: 50px;
+    font-weight: 500; // less heavy than the browser's default bold h1
+  }
+}
+
+// The descriptive line under "Hi, I'm Elisa!" — same font as the
+// line above it (inherited from h1) just smaller, on its own line
+.hero-subtitle {
+  display: block;
+  font-size: 29px;
+  margin-top: 10px;
 }
 
 .hero-image {
-  flex: 0 0 auto;
-  width: 390px;
-  max-width: 100%; // shrink gracefully on narrow screens instead of overflowing
+  flex: 0 1 auto;
+  max-width: min(320px, 100%); // kept close to the hero-text content's natural height, so the photo ends up only barely taller than the title/intro/socials block next to it
 }
 
 .hero-image-placeholder {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 6 / 7;
   background: linear-gradient(135deg, $tan, $blush);
   border-radius: 8px;
 }
 
 .hero-image-photo {
   display: block;
-  width: 100%;
-  aspect-ratio: 1 / 1;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  aspect-ratio: 6 / 7; // closer to square than before, just a touch portrait
   object-fit: cover;
   border-radius: 8px;
 }
 
+.hero-socials {
+  margin-top: 14px;
+}
+
 .hero-socials a {
   float: left;
-  margin-right: $spacer-2;
+  margin-right: $spacer-3;
+}
+
+.hero-socials svg {
+  width: 28px;
+  height: 28px;
 }
 
 // Footer icons: match the height of the star pill next to them
@@ -128,13 +157,16 @@ header ul li a:hover {
   z-index: 1;
 }
 
+// Everything in the timeline is scaled to ~80% of normal size
 .timeline-card {
+  position: relative; // so .timeline-category can be positioned against this card specifically
   background: rgba($color-card-background, 0.65);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   border: 1px solid $color-border;
   border-radius: 4px;
-  padding: $spacer-2;
+  padding: $spacer-2 * 0.8;
+  font-size: 13px;
   transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
@@ -142,16 +174,169 @@ header ul li a:hover {
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
     transform: translateY(-2px) scale(1.01);
   }
+
+  h2 {
+    font-size: $h2-size * 0.8;
+  }
+
+  // Overrides .prose ul/ol/p (from _components.scss), which would
+  // otherwise force the bullet text to 24px — sized between the
+  // tags/date (10-13px) and the title (25.6px)
+  ul, ol, p {
+    font-size: 16px;
+  }
+
+  .tag-list span {
+    font-size: 12px;
+    padding: 2px 8px;
+  }
+}
+
+// "See more" link — only rendered when an entry sets `see_more: true` in
+// its front matter, since most experience/project entries don't have a
+// separate detail page worth linking to.
+.timeline-see-more-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: $spacer-1 * 0.8;
+}
+
+.timeline-see-more {
+  font-size: 12px;
+  font-weight: 500;
+  // A true neutral gray rather than the palette's warm-tinted $gray/$black,
+  // which read as brownish here.
+  color: #999999;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $color-accent;
+  }
+}
+
+// The category badge(s) — sit as rectangular tabs flush on top of the
+// card's top edge, fully above it so they never overlap the box itself
+.timeline-category-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(-100%);
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+.timeline-category {
+  display: inline-block;
+  background: $badge-periwinkle;
+  color: $white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 3px 10px;
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  white-space: nowrap;
+}
+
+// Project card descriptions. Scoped as .prose .card-description because
+// .prose p (_components.scss) has higher specificity (class+element beats
+// a single class) and would otherwise silently win and force these back
+// to $prose-font-size.
+.prose .card-description {
+  font-size: 16px;
+}
+
+// Featured Project cards — matches the timeline-card's proportions
+// (title/description/tag sizes) so both sections read consistently.
+// Widened to 2-per-row (instead of .card's default 3-per-row) so the
+// two featured cards together span the full container width.
+.card-featured {
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: $breakpoint-lg) {
+    width: calc(50% - #{$spacer-2});
+  }
+
+  h3 {
+    font-size: $h2-size * 0.8;
+  }
+
+  // Pushes the tags (and the see-more row right after them) down to the
+  // bottom of the card, so both stay aligned across cards of uneven
+  // description length instead of trailing right after the text.
+  .tag-list {
+    margin-top: auto;
+
+    span {
+      font-size: 12px;
+      padding: 2px 8px;
+    }
+  }
+}
+
+// The "Below is a comprehensive list..." caption under a section heading.
+// Scoped as .prose .section-subtext for the same specificity reason as
+// .card-description above.
+.prose .section-subtext {
+  font-size: 16px;
+  color: $color-text-accent;
+}
+
+// Category filter pills above the timeline
+.filter-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacer-2;
+}
+
+.filter-pill {
+  font-family: inherit;
+  font-size: 15px;
+  background: rgba($color-card-background, 0.65);
+  color: $color-body-text;
+  border: 1px solid $color-border;
+  border-radius: 20px;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+
+  &:hover {
+    border-color: $color-accent;
+    transform: translateY(-1px);
+  }
+
+  &.is-active {
+    background: $badge-periwinkle;
+    color: $white;
+    border-color: $badge-periwinkle;
+  }
 }
 
 .timeline-header {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: flex-start;
   flex-wrap: wrap;
-  margin-bottom: $spacer-1;
+  margin-bottom: $spacer-1 * 0.8;
 
   h2 {
     margin-top: 0;
   }
 }
+
+.timeline-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.timeline-role,
+.timeline-date {
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.5;
+  color: $color-text-accent;
+}
+

@@ -1,0 +1,15 @@
+# Manually defines the display order of _projects entries on the timeline
+# at /experience/ — top to bottom, most recent first. List each entry by
+# its filename (no extension). Anything left off this list won't show up
+# in the timeline.
+- sandia_ml_trust
+- sandia_obfuscation
+- appdev_courseroad_share
+- csail_synthetic_malware
+- futuretech_airi
+- appdev_typynb
+- aim_labs
+- gmu_apr
+- gov_policy
+# gmu_multi_language
+- gmu_security_commits

@@ -15,22 +15,21 @@
 
         <div class="container mx-auto px-2 mt-2 mb-2 clearfix hero-grid">
 
+          <div class="hero-image">
+            <img src="{{ '/assets/profile_pic.png' | relative_url }}" alt="{{ site.title }}" class="hero-image-photo">
+          </div>
+
           <div class="hero-text">
-            <h1 class="h0 header-title">{{ site.title }}</h1>
-            <p class="h4 lh-condensed font-smoothing prose-intro">
-              <!-- TODO: replace with your own one-sentence intro -->
-              {{ site.description }}
-            </p>
-            <div class="hero-socials mt-2 clearfix">
+            <h1 class="h0 header-title">hi, i'm elisa!<span class="hero-subtitle">i'm an MIT undergrad studying<br>AI &amp; decision making</span></h1>
+            <div class="h4 lh-condensed font-smoothing prose-intro">
+              {{ site.data.home.intro | markdownify }}
+            </div>
+            <div class="hero-socials clearfix">
               {% include email.html %}
               {% include linkedin.html %}
               {% include github.html %}
               {% include scholar.html %}
             </div>
-          </div>
-
-          <div class="hero-image">
-            <img src="{{ '/assets/profile_pic.png' | relative_url }}" alt="{{ site.title }}" class="hero-image-photo">
           </div>
 
         </div>
@@ -39,35 +38,12 @@
 
       <div class="container mx-auto px-2 py-2">
         <div class="card-grid">
-          <!-- TODO: adjust the one-sentence description under each as your sections evolve -->
-          <a class="card block no-underline" href="{{ '/about/' | prepend: site.baseurl }}">
-            <h3 class="mb-1">About</h3>
-            <p>Who I am and what I care about.</p>
+          {% for section in site.data.home_sections %}
+          <a class="card card-centered no-underline" href="{{ section.url | prepend: site.baseurl }}">
+            <h3 class="mb-0">{{ section.title }}</h3>
+            <span class="card-arrow">&rarr;</span>
           </a>
-          <a class="card block no-underline" href="{{ '/experience/' | prepend: site.baseurl }}">
-            <h3 class="mb-1">Experience</h3>
-            <p>Where I've worked, briefly.</p>
-          </a>
-          <a class="card block no-underline" href="{{ '/projects/' | prepend: site.baseurl }}">
-            <h3 class="mb-1">Projects</h3>
-            <p>A few things I've built.</p>
-          </a>
-          <a class="card block no-underline" href="{{ '/art/' | prepend: site.baseurl }}">
-            <h3 class="mb-1">Art</h3>
-            <p>Work outside of code.</p>
-          </a>
-          <a class="card block no-underline" href="{{ '/blog/' | prepend: site.baseurl }}">
-            <h3 class="mb-1">Blog</h3>
-            <p>Recent writing.</p>
-          </a>
-          <a class="card block no-underline" href="{{ '/resume/' | prepend: site.baseurl }}">
-            <h3 class="mb-1">Resume</h3>
-            <p>The short version, as a PDF.</p>
-          </a>
-          <a class="card block no-underline" href="{{ '/contact/' | prepend: site.baseurl }}">
-            <h3 class="mb-1">Contact</h3>
-            <p>How to reach me.</p>
-          </a>
+          {% endfor %}
         </div>
       </div>
 

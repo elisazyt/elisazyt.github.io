@@ -1,0 +1,5 @@
+# Which _projects entries to show as "Featured Projects" at the top of
+# the page, and in what order. List each by its filename (no extension) —
+# the featured card links to that same entry's detail page.
+- gmu_apr
+- csail_synthetic_malware
