@@ -63,11 +63,11 @@ order: 2
         <div class="timeline-header">
           <h2 class="mb-0">{{ job.title }}</h2>
           <div class="timeline-meta">
-            <span class="timeline-role">{{ job.role }}</span>
+            <span class="timeline-role">{{ job.workplace }}</span>
             <span class="timeline-date">{{ job.date_range }}</span>
           </div>
         </div>
-        {{ job.content }}
+        {{ job.description | markdownify }}
         <div class="tag-list">
           {% for tag in job.primary_tags %}<span class="tag-primary">{{ tag }}</span>{% endfor %}
           {% for tag in job.tags %}<span>{{ tag }}</span>{% endfor %}

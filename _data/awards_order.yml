@@ -1,0 +1,18 @@
+# Controls both the category order (top-level keys, in the order listed)
+# and the award order within each category (list order) on /about/.
+# List each award by its _awards filename (no extension). Anything left
+# off this list won't show up.
+Research:
+  - sts
+  - davidson_fellow
+  - aixcc
+Academic:
+  - presidential_scholar
+  - aime
+  - bmt_dhr
+Dance:
+  - dance_2022_solo
+  - dance_2022_group
+  - dance_msa
+  - dance_2018
+  - dance_2014

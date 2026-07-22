@@ -84,21 +84,74 @@
 }
 
 .award-item {
+  display: block;
   background: rgba($color-card-background, 0.65);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   border-left: 3px solid $color-accent;
   padding: $spacer-1 $spacer-2;
   margin-bottom: $spacer-1;
-  transition: border-color 0.2s ease;
-
-  strong {
-    color: $color-title;
-  }
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 
   &:hover {
     border-left-color: $color-accent-bright;
   }
+}
+
+.award-item-starred {
+  background: rgba(darken($blush, 4%), 0.58);
+  border-left-color: $color-accent-bright;
+
+  &:hover {
+    border-left-color: $color-accent-bright;
+  }
+}
+
+.award-star {
+  color: $star-gold;
+  margin-right: 2px;
+}
+
+.award-link-icon {
+  color: $color-text-accent;
+  font-size: 14px;
+  margin-left: 2px;
+}
+
+.award-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: $spacer-1;
+}
+
+.award-title {
+  margin-top: 0;
+  color: $color-title;
+}
+
+.award-date {
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.5;
+  color: $color-text-accent;
+  white-space: nowrap;
+}
+
+.award-org {
+  font-family: $header-font-family;
+  font-size: 14px;
+  color: $color-text-accent;
+}
+
+// Scoped as .prose .award-description because .prose p (_components.scss)
+// has higher specificity (class+element beats a single class) and would
+// otherwise silently win and force this back to $prose-font-size.
+.prose .award-description {
+  font-size: 13px;
+  color: $color-body-text;
+  margin-top: $spacer-1 * 0.5;
 }
 
 .card .skill-list {

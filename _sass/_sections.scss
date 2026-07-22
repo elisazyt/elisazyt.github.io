@@ -4,6 +4,13 @@
   max-width: 32em;
 }
 
+// Individual project/experience detail pages reuse the site-wide .h0 title
+// style, but at 96px on desktop it's too dominant for a page that's mostly
+// body text — scale it down closer to a section heading.
+.project-detail-page h1.h0 {
+  font-size: 60px;
+}
+
 // Translucent, blurred sticky header — same technique as jvboid.dev's nav
 header {
   position: sticky;
@@ -219,7 +226,7 @@ header ul li a:hover {
 .timeline-category-list {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 8px; // tucked in slightly from the card's edge, rather than perfectly flush or poking out past it
   transform: translateY(-100%);
   display: flex;
   gap: 6px;
@@ -238,10 +245,14 @@ header ul li a:hover {
   white-space: nowrap;
 }
 
-// Project card descriptions. Scoped as .prose .card-description because
-// .prose p (_components.scss) has higher specificity (class+element beats
-// a single class) and would otherwise silently win and force these back
-// to $prose-font-size.
+// Project card descriptions.
+.card-description {
+  font-size: 16px;
+}
+
+// Also scoped as .prose .card-description because .prose p (_components.scss)
+// has higher specificity (class+element beats a single class) and would
+// otherwise silently win and force these back to $prose-font-size.
 .prose .card-description {
   font-size: 16px;
 }

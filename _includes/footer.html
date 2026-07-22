@@ -14,3 +14,17 @@
     </ul>
   </div>
 </div>
+
+<script>
+  // Any link pointing off-site (markdown links in descriptions/bodies included)
+  // opens in a new tab. Internal navigation is left alone.
+  (function () {
+    document.querySelectorAll('a[href]').forEach(function (link) {
+      var isHttp = link.protocol === 'http:' || link.protocol === 'https:';
+      if (isHttp && link.hostname !== window.location.hostname) {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+      }
+    });
+  })();
+</script>

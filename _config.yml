@@ -40,3 +40,5 @@ collections:
   projects:
     output: true
     permalink: /experience/:path/
+  awards:
+    output: false

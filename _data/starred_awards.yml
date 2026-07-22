@@ -1,0 +1,5 @@
+# Which _awards entries get a star and a brighter highlight in the
+# Awards & Recognition section on /about/. Entries still show up in their
+# normal spot (per _data/awards_order.yml) — this only changes styling.
+# List each by its filename (no extension).
+- sts

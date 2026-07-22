@@ -1,16 +1,15 @@
 ---
 layout: project-detail
 see_more: true
-title: "database of python security commits"
-role: "placeholder role / organization"
-date_range: "06/2022-09/2022, 09/2023-10/2023"
-categories: ["research"]
-description: "One-line placeholder description of your role and impact."
-primary_tags: ["python"]
-tags: ["placeholder", "placeholder"]
+title: python security commit database
+workplace: George Mason University
+date_range: 06/2022-09/2022, 09/2023-10/2023
+categories: [research]
+description: Classified, verified, and analyzed security patches from MITRE and GitHub to create a Python security commit database.
+primary_tags: [python]
+tags: [security patch, graph learning, topic modeling]
 ---
 
-<!-- TODO: replace with your real experience -->
+insert extended description
 
-- Placeholder bullet describing a key responsibility or achievement.
-- Placeholder bullet describing a project you led or shipped.
+Co-authored and presented research paper, ["Exploring Security Commits In Python"](https://arxiv.org/abs/2307.11853), at the 2023 IEEE International Conference on Software Maintenance and Evolution (ICSME). The database is available by request [on Hugging Face](https://huggingface.co/datasets/sunlab/PySecDB).

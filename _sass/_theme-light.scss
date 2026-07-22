@@ -16,6 +16,7 @@ $tan: #D9C6B3;         // borders
 $blush: #EBCFC4;       // soft fill (tag pills)
 $pink-dark: #C9A3A3;   // accent (links, hover)
 $pink-bright: #E68CC6; // pop highlight
+$star-gold: #E3B23C;   // starred-award star
 
 // Flat page background (no blur) — warm off-white/cream-gray rather than
 // a flat technical gray
@@ -39,7 +40,7 @@ $blob-periwinkle: #C9C6E8; // blue-violet, between blue and lavender
 // (less red) so it reads as blue-leaning rather than purple. Mixed with
 // blush to mute/desaturate it so it blends with the surrounding pink
 // tones instead of popping as a bright, unrelated blue.
-$badge-periwinkle: darken(mix(#8FA3E0, $blush, 55%), 12%);
+$badge-periwinkle: darken(mix(#8FA3E0, $blush, 90%), 3%);
 
 // Config
 $color-background: $bg-flat !default;
