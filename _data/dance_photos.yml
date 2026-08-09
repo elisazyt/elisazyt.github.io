@@ -1,0 +1,7 @@
+# Photos for the sliding carousel on /dance/. Full-size originals live in
+# assets/pics_vids/dance/, and the carousel actually loads the resized
+# copies from assets/pics_vids/dance/web/ (same filenames) — full-res
+# camera files made the slide animation janky, so add any new photo to
+# both places: the original in dance/, a ~1600px-wide copy in dance/web/.
+# Add a filename here to add it to the carousel, reorder lines to reorder
+# the slides.

@@ -11,6 +11,202 @@
   font-size: 60px;
 }
 
+// The extended-description body text on a project's detail page was
+// using .prose's default $prose-font-size (24px) — sized for large
+// intro-style prose, too big for a page that's mostly reading. Matches
+// .prose.post-body's blog-post size (_components.scss).
+.project-detail-page .prose p,
+.project-detail-page .prose ol,
+.project-detail-page .prose ul {
+  font-size: 17px;
+}
+
+// A markdown `---` (thematic break) doubles as a section divider within
+// a project's description — e.g. separating the PI/mentor line, the
+// project description, and a closing note into distinct sections. Pure
+// spacing (no visible line, no top/bottom margin on the p's around it to
+// double up): more room than the ~1em gap between two ordinary
+// paragraphs, but less than a full blank line's worth of space. Lets a
+// project page have as many of these sections as needed just by adding
+// another `---` in the markdown, without any custom HTML per gap.
+.project-detail-page .prose hr {
+  border: none;
+  margin: 12px 0;
+}
+
+// Same reasoning for blog post titles — 96px is too dominant above a page
+// of body text.
+.post-header {
+  // Matches .prose.post-body's padding-left (_components.scss) so the
+  // title lines up with the body text below it instead of sitting further
+  // left.
+  padding-left: $spacer-2;
+
+  h1.h0 {
+    font-size: 64px;
+    margin-bottom: 0;
+    // .h0's own margin-top (0.85em, _utilities.scss) would otherwise
+    // stack on top of .post-header's mt-4, pushing the title further
+    // from the top of the page than intended.
+    margin-top: 0;
+  }
+}
+
+// Small dotted divider under a page/post title — a lighter alternative to
+// a plain solid rule. Width: 100% fills its grid column (.header-text,
+// _utilities.scss), which is sized to the title's own width, so the
+// divider always matches the title's rendered length instead of a guessed
+// fixed value.
+.title-divider-dotted {
+  width: 100%;
+  margin-top: $spacer-1;
+  border-top: 3px dotted $color-border;
+}
+
+// /thoughts/ post list entries — a real card (matches .timeline-card's
+// background/border/hover treatment) rather than plain stacked text, so
+// each entry has real visual weight and the section takes up more of the
+// page instead of reading as a cramped list.
+.post-preview {
+  position: relative; // anchors &-title-link's stretched-link overlay below
+  display: block;
+  background: rgba($color-card-background, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid $color-border;
+  border-radius: 6px;
+  padding: $spacer-1 $spacer-3;
+  margin-bottom: $spacer-2;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    border-color: $color-accent;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  h2.h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
+
+  &-title-link {
+    color: $color-title;
+    text-decoration: none;
+    border-bottom: none;
+
+    // "Stretched link": an invisible overlay covering the entire card, so
+    // clicking anywhere goes to the post — without wrapping the whole
+    // card in one real <a> (which would break, since .post-preview-contents
+    // needs its own separate links; nesting <a> inside <a> is invalid
+    // HTML). Any other real link inside the card just needs a higher
+    // z-index (.post-preview-contents a, below) to sit above this overlay
+    // and intercept its own clicks first.
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+  }
+
+  // The title link visibly reacts when the card itself is hovered
+  // (border/shadow/lift above), not just when the title text itself is —
+  // reinforces "the whole card is the click target."
+  &:hover &-title-link {
+    color: $color-accent;
+  }
+
+  p {
+    font-size: 17px;
+    margin-bottom: 0;
+  }
+
+  // Section-name outline (post.sections in front matter, up to 3 levels
+  // deep — post_block.html). Top level is a real 2-column grid — label
+  // column | subsections column — rather than flexbox, specifically so
+  // the subsections column starts at the same x position on every row
+  // regardless of how long each section's own name is ("Context" is
+  // shorter than "Important research directions", so a flexbox row-by-row
+  // layout would indent its subsections less far right — grid sizes the
+  // column to the widest label across *all* rows, not per row). Each
+  // top-level <li> uses display: contents so its <a> and <ul> become
+  // direct grid children instead of starting their own nested box — that
+  // only works because post_block.html always emits the <ul> (even empty)
+  // for every section, keeping exactly 2 grid items per row.
+  //
+  // Deeper levels (subsection → sub-subsection) stay flexbox, nested
+  // inside their own grid cell — same "row = label + children-to-right,
+  // connected by a left border" idea, just not grid-aligned against
+  // *other* subsections' own sub-subsections, since that's a much less
+  // visible alignment gap than the top-level one this fixes.
+  &-contents {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    align-items: start;
+    row-gap: 10px;
+    column-gap: 14px;
+    margin-top: 16px;
+    padding-left: 0;
+    list-style: none;
+
+    // Top-level <li>s dissolve so their <a> + <ul> become direct grid
+    // children (see comment above). Deeper <li>s (inside a nested <ul>)
+    // keep the row layout: own link, then its children to the right.
+    > li {
+      display: contents;
+    }
+
+    ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-left: 2px;
+      padding-left: 12px;
+      border-left: 2px solid $color-border;
+      list-style: none;
+    }
+
+    // Plain text links, not pills/buttons — color/weight step down one
+    // level at a time so depth still reads clearly without needing a
+    // box around each item. Raised above .post-preview-title-link's
+    // full-card stretched overlay (higher z-index + position so it
+    // actually establishes a stacking context) so these remain
+    // independently clickable instead of the card-wide link swallowing
+    // the click.
+    a {
+      position: relative;
+      z-index: 2;
+      color: $color-title;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      border-bottom: none;
+      transition: color 0.15s ease;
+
+      &:hover {
+        color: $color-accent;
+      }
+    }
+
+    ul a {
+      color: $color-text-accent;
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    ul ul a {
+      font-size: 12px;
+    }
+  }
+}
+
 // Translucent, blurred sticky header — same technique as jvboid.dev's nav
 header {
   position: sticky;
@@ -38,16 +234,19 @@ header {
 
   h1 {
     margin-top: 0; // otherwise the global 1em heading margin pushes the name below the image's top edge
+    font-family: 'Lora', Athelas, Palatino, Georgia, serif;
     font-size: 50px;
-    font-weight: 500; // less heavy than the browser's default bold h1
+    font-weight: 500; // less heavy than the browser's default bold h1 — this is the actual heading, so it keeps some weight
   }
 }
 
 // The descriptive line under "Hi, I'm Elisa!" — same font as the
-// line above it (inherited from h1) just smaller, on its own line
+// line above it (inherited from h1) just smaller, on its own line.
+// Not itself a heading, so no bold — just inherits Lora from the h1.
 .hero-subtitle {
   display: block;
   font-size: 29px;
+  font-weight: 400;
   margin-top: 10px;
 }
 
@@ -199,16 +398,31 @@ header ul li a:hover {
   }
 }
 
-// "See more" link — only rendered when an entry sets `see_more: true` in
-// its front matter, since most experience/project entries don't have a
-// separate detail page worth linking to.
-.timeline-see-more-row {
+// .tag-list is a flex row (rather than plain inline-block wrapping) so
+// .timeline-see-more (below) can use margin-left: auto to sit flush right
+// on the same line as the tags — same idea as the old separate
+// .timeline-see-more-row, just merged into one row instead of two.
+.tag-list {
   display: flex;
-  justify-content: flex-end;
-  margin-top: $spacer-1 * 0.8;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-.timeline-see-more {
+// "See more" link — only rendered when an entry sets `see_more: true` in
+// its front matter, since most experience/project entries don't have a
+// separate detail page worth linking to. Lives right inside .tag-list
+// (last child, after the tags) so it shares the tags' bottom-most line
+// instead of sitting in its own row underneath them. Specificity bumped
+// to .tag-list span.timeline-see-more (class+class+element) so this
+// reliably wins over .tag-list span's tag-pill styling (_cards.scss,
+// class+element) regardless of stylesheet source order — without this it
+// rendered as a same-look tag instead of a plain gray link.
+.tag-list span.timeline-see-more {
+  display: inline-block;
+  margin: 6px 0 0 auto;
+  padding: 0;
+  background: none;
+  border: none;
   font-size: 12px;
   font-weight: 500;
   // A true neutral gray rather than the palette's warm-tinted $gray/$black,
@@ -286,10 +500,30 @@ header ul li a:hover {
   }
 }
 
-// The "Below is a comprehensive list..." caption under a section heading.
-// Scoped as .prose .section-subtext for the same specificity reason as
-// .card-description above.
-.prose .section-subtext {
+// The "Below is a comprehensive list..." caption under a section heading —
+// used both as a single element with the class directly on a <p>
+// (/experience/) and as a wrapper div around markdownify'd, possibly
+// multi-paragraph content (/thoughts/'s intro), hence styling both the
+// element itself and any <p> children.
+.section-subtext,
+.section-subtext p {
+  font-size: 16px;
+  color: $color-text-accent;
+}
+
+.section-subtext p {
+  margin-bottom: 0.6em;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Also scoped as .prose .section-subtext for the same specificity reason
+// as .card-description above — in case this is ever used inside a .prose
+// block, where .prose p would otherwise win and force it back to 24px.
+.prose .section-subtext,
+.prose .section-subtext p {
   font-size: 16px;
   color: $color-text-accent;
 }

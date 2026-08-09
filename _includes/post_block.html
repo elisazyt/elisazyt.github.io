@@ -1,8 +1,46 @@
-<!-- Renders post date, title, and snippet of text. -->
-<div class="py-1 mb-1 prose">
-  <h2 class="h1 lh-condensed col-9 mb-0">
-    <a class="link-primary" title="{{ post.url | prepend: site.baseurl }}" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+<!-- Renders post title, a description blurb, and (if set) a contents outline.
+     Deliberately NOT one big wrapping <a> like .timeline-card/.card-featured —
+     .post-preview-contents below has its own links to jump straight into a
+     specific section, and nesting <a> inside <a> is invalid HTML (browsers
+     silently mangle it). .post-preview:hover styling (_sections.scss) gives
+     the same "whole card responds to hover" feel without that. -->
+<div class="prose post-preview">
+  <h2 class="h1 lh-condensed mb-0">
+    <a class="post-preview-title-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
   </h2>
-  <a class="no-underline-hover h5 block py-1 mb-1" title="{{ post.url | prepend: site.baseurl }}" href="{{ post.url | prepend: site.baseurl }}">{{ post.date | date: "%b %-d, %Y" }}</a>
-  <p>{{ post.content | strip_html | truncatewords:30 }}</p>
+  {% if post.description %}
+  <p class="post-preview-description">{{ post.description }}</p>
+  {% else %}
+  <p class="post-preview-description">{{ post.content | strip_html | truncatewords: 30 }}</p>
+  {% endif %}
+  {% if post.sections %}
+  <ul class="post-preview-contents">
+    {% for section in post.sections %}
+    <li>
+      <a href="{{ post.url | prepend: site.baseurl }}#{{ section.title | slugify }}">{{ section.title }}</a>
+      <!-- Always render this <ul>, even empty (no subsections) — the grid
+           layout below (.post-preview-contents) relies on every top-level
+           <li> contributing exactly 2 children (the <a> and this <ul>) via
+           display: contents, so its column alignment stays correct row to
+           row. An empty <ul> just renders as nothing. -->
+      <ul>
+        {% if section.subsections %}
+        {% for sub in section.subsections %}
+        <li>
+          <a href="{{ post.url | prepend: site.baseurl }}#{{ sub.title | slugify }}">{{ sub.title }}</a>
+          {% if sub.subsections %}
+          <ul>
+            {% for subsub in sub.subsections %}
+            <li><a href="{{ post.url | prepend: site.baseurl }}#{{ subsub.title | slugify }}">{{ subsub.title }}</a></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </li>
+        {% endfor %}
+        {% endif %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
 </div>

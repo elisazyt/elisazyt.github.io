@@ -64,7 +64,18 @@
 .header-background { background-color: $color-background; }
 .header-border { border-color: $color-foreground; }
 .header-title { color: $color-title; }
-.header-text { color: $color-foreground; }
+// display: grid + a max-content column makes the column exactly as wide as
+// its widest child (the title) — so .title-divider-dotted's width: 100%
+// (_sections.scss) automatically matches the title's rendered width
+// instead of needing a guessed fixed value.
+.header-text {
+  color: $color-foreground;
+  display: grid;
+  // minmax(0, ...) lets the column shrink below its content's unwrapped
+  // width when there isn't room — plain max-content would size to the
+  // title's full unwrapped width and overflow the page for long titles.
+  grid-template-columns: minmax(0, max-content);
+}
 .header-social { fill: $color-foreground; }
 .header-link:hover { color: $color-nav-link !important; } // used for navigation links on homepage
 .text-accent { color: $color-text-accent; } // used for date in post list and home link

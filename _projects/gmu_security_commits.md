@@ -1,11 +1,11 @@
 ---
 layout: project-detail
 see_more: true
-title: python security commit database
+title: Python security commit database
 workplace: George Mason University
 date_range: 06/2022-09/2022, 09/2023-10/2023
 categories: [research]
-description: Classified, verified, and analyzed security patches from MITRE and GitHub to create a Python security commit database.
+description: todo
 primary_tags: [python]
 tags: [security patch, graph learning, topic modeling]
 ---

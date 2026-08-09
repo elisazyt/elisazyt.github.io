@@ -27,4 +27,509 @@
       }
     });
   })();
+
+  // Sliding photo carousels: N slides visible per view (CSS-controlled),
+  // advances one slide at a time, auto-plays, and wraps seamlessly (last
+  // slide continues straight into the first, no reverse jump) by padding
+  // the track with cloned slides at each end and snapping invisibly once
+  // the clones scroll into view.
+  (function () {
+    document.querySelectorAll('.carousel').forEach(function (carousel) {
+      var wrap = carousel.querySelector('.carousel-track-wrap');
+      var track = carousel.querySelector('.carousel-track');
+      var prevBtn = carousel.querySelector('.carousel-arrow-left');
+      var nextBtn = carousel.querySelector('.carousel-arrow-right');
+      var realSlides = Array.prototype.slice.call(track.children);
+      if (!track || realSlides.length === 0) return;
+
+      var visibleCount, index, timer;
+      var intervalMs = 4000;
+
+      function slideStep() {
+        var gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 0;
+        return track.children[0].getBoundingClientRect().width + gap;
+      }
+
+      function setTransform(withTransition) {
+        track.style.transition = withTransition ? '' : 'none';
+        track.style.transform = 'translateX(' + (-index * slideStep()) + 'px)';
+        if (!withTransition) {
+          track.offsetHeight; // force reflow so the transition stays disabled for this snap
+          track.style.transition = '';
+        }
+      }
+
+      function build() {
+        var slideWidth = realSlides[0].getBoundingClientRect().width;
+        visibleCount = Math.max(1, Math.round(wrap.offsetWidth / slideWidth));
+
+        track.innerHTML = '';
+        realSlides.slice(-visibleCount).forEach(function (s) {
+          var c = s.cloneNode(true);
+          c.setAttribute('data-clone', 'true');
+          track.appendChild(c);
+        });
+        realSlides.forEach(function (s) { track.appendChild(s); });
+        realSlides.slice(0, visibleCount).forEach(function (s) {
+          var c = s.cloneNode(true);
+          c.setAttribute('data-clone', 'true');
+          track.appendChild(c);
+        });
+
+        index = visibleCount;
+        setTransform(false);
+      }
+
+      track.addEventListener('transitionend', function () {
+        if (index >= visibleCount + realSlides.length) {
+          index = visibleCount;
+          setTransform(false);
+        } else if (index < visibleCount) {
+          index = visibleCount + realSlides.length - 1;
+          setTransform(false);
+        }
+      });
+
+      function next() {
+        index++;
+        setTransform(true);
+      }
+
+      function prev() {
+        index--;
+        setTransform(true);
+      }
+
+      function resetTimer() {
+        clearInterval(timer);
+        timer = setInterval(next, intervalMs);
+      }
+
+      if (nextBtn) nextBtn.addEventListener('click', function () { next(); resetTimer(); });
+      if (prevBtn) prevBtn.addEventListener('click', function () { prev(); resetTimer(); });
+
+      var resizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(build, 150);
+      });
+
+      build();
+      resetTimer();
+    });
+  })();
+
+  // Blog post blockquotes (`> ...` in markdown) start collapsed, and every
+  // h2 section after the first also starts collapsed (the first section —
+  // e.g. "Preface" / "Why I care" — stays visible as the post's intro).
+  // Each gets its own toggle arrow; the post's "expand all" button (if
+  // present) drives every quote and section in that post at once, sharing
+  // one combined expanded/collapsed state so a single click is consistent
+  // across both kinds of entries.
+  (function () {
+    function setExpanded(wrapper, toggle, expanded, expandedLabel, collapsedLabel) {
+      wrapper.classList.toggle('expanded', expanded);
+      wrapper.classList.toggle('collapsed', !expanded);
+      toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      toggle.setAttribute('aria-label', expanded ? expandedLabel : collapsedLabel);
+      var label = toggle.querySelector('.section-toggle-label');
+      if (label) label.textContent = expanded ? 'collapse' : 'expand';
+    }
+
+    document.querySelectorAll('.post-body').forEach(function (postBody) {
+      var entries = [];
+      var sectionEntries = [];
+      var expandAllBtn = postBody.querySelector('.expand-all-toggle');
+      var footnotesEl = postBody.querySelector('.footnotes');
+
+      // Footnotes stay hidden until at least one section is expanded, then
+      // show all of them at once (rather than trying to show only the
+      // footnotes referenced by whatever's currently open, which would
+      // mean re-deriving which footnotes belong to which section).
+      function updateFootnotesVisibility() {
+        if (!footnotesEl) return;
+        var anySectionExpanded = sectionEntries.some(function (entry) {
+          return entry.wrapper.classList.contains('expanded');
+        });
+        footnotesEl.classList.toggle('footnotes-hidden', !anySectionExpanded);
+      }
+
+      postBody.querySelectorAll('blockquote').forEach(function (quote) {
+        // Grab the preceding element before moving anything, so the
+        // toggle can be appended right after its last word — the toggle
+        // reads as part of that paragraph's line, not its own line. The
+        // blockquote itself still lives in its own wrapper below, so once
+        // expanded it still starts fresh on its own line as a block.
+        var prevEl = quote.previousElementSibling;
+
+        var wrapper = document.createElement('div');
+        wrapper.className = 'quote-wrapper collapsed';
+        quote.parentNode.insertBefore(wrapper, quote);
+        wrapper.appendChild(quote);
+
+        var toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'quote-toggle';
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Expand quote');
+        // Shape is drawn purely with CSS borders (see .quote-toggle) rather
+        // than a text glyph — the &#9656; character sat visibly low in its
+        // box on some fonts, reading as bottom-aligned with the text.
+
+        if (prevEl) {
+          prevEl.appendChild(toggle);
+        } else {
+          wrapper.insertBefore(toggle, quote);
+        }
+
+        entries.push({ wrapper: wrapper, toggle: toggle, expandedLabel: 'Collapse quote', collapsedLabel: 'Expand quote' });
+
+        toggle.addEventListener('click', function () {
+          setExpanded(wrapper, toggle, !wrapper.classList.contains('expanded'), 'Collapse quote', 'Expand quote');
+        });
+      });
+
+      var h2s = Array.prototype.slice.call(postBody.querySelectorAll('h2'));
+
+      // Zero out the first heading's own top margin so the "expand all"
+      // button (above) sits equally spaced from the title above it and
+      // this heading below it — matching .post-body's padding-top and
+      // this button's own margin-bottom (_components.scss). Done here via
+      // the actual first-h2 reference (robust to whatever content, if
+      // any, sits between the button and the heading) rather than a CSS
+      // adjacent-sibling selector, which would silently stop matching if
+      // that in-between content changes.
+      if (expandAllBtn && h2s.length) {
+        h2s[0].style.marginTop = '0';
+      }
+
+      h2s.forEach(function (h2, index) {
+        if (index === 0) return; // first section (the post's intro) stays visible
+
+        // Collect this h2's own following siblings up to (not including)
+        // the next h2 — that's the section's body content. Also stops at
+        // the footnotes list (kramdown's trailing div.footnotes): for the
+        // last section in a post, there's no next h2 to stop the loop
+        // naturally, so without this check the footnotes would get swept
+        // in as that section's content and hidden whenever it's
+        // collapsed — footnotes should always stay visible regardless of
+        // which sections are open.
+        var contentNodes = [];
+        var el = h2.nextElementSibling;
+        while (el && el.tagName !== 'H2' && !el.classList.contains('footnotes')) {
+          var next = el.nextElementSibling;
+          contentNodes.push(el);
+          el = next;
+        }
+
+        var wrapper = document.createElement('div');
+        wrapper.className = 'section-wrapper collapsed';
+        h2.parentNode.insertBefore(wrapper, h2);
+        wrapper.appendChild(h2);
+
+        var toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'section-toggle';
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Expand section');
+
+        var arrow = document.createElement('span');
+        arrow.className = 'section-toggle-arrow';
+        toggle.appendChild(arrow);
+
+        var label = document.createElement('span');
+        label.className = 'section-toggle-label';
+        label.textContent = 'expand';
+        toggle.appendChild(label);
+
+        // A sibling of h2 (appended right after it), not a child inside
+        // it — so it renders on its own line below the heading instead of
+        // inline next to the heading text.
+        wrapper.appendChild(toggle);
+
+        var content = document.createElement('div');
+        content.className = 'section-content';
+        contentNodes.forEach(function (node) { content.appendChild(node); });
+        wrapper.appendChild(content);
+
+        var sectionEntry = { wrapper: wrapper, toggle: toggle, expandedLabel: 'Collapse section', collapsedLabel: 'Expand section' };
+        entries.push(sectionEntry);
+        sectionEntries.push(sectionEntry);
+
+        toggle.addEventListener('click', function () {
+          setExpanded(wrapper, toggle, !wrapper.classList.contains('expanded'), 'Collapse section', 'Expand section');
+          updateFootnotesVisibility();
+        });
+      });
+
+      updateFootnotesVisibility();
+
+      var expandAllLabel = expandAllBtn && expandAllBtn.querySelector('.expand-all-label');
+      if (expandAllBtn && entries.length) {
+        expandAllBtn.addEventListener('click', function () {
+          var expandAll = expandAllBtn.dataset.state !== 'expanded';
+          entries.forEach(function (entry) {
+            setExpanded(entry.wrapper, entry.toggle, expandAll, entry.expandedLabel, entry.collapsedLabel);
+          });
+          expandAllBtn.dataset.state = expandAll ? 'expanded' : 'collapsed';
+          if (expandAllLabel) expandAllLabel.textContent = expandAll ? 'collapse all' : 'expand all';
+          updateFootnotesVisibility();
+        });
+      }
+
+      // A footnote's "back to text" link (kramdown's .reversefootnote)
+      // jumps to its #fnref marker up in the main text — but that marker
+      // could be inside a still-collapsed section (footnotes are shared
+      // across the whole post, not per-section, so clicking back from
+      // footnote 1 doesn't mean you're currently looking at whichever
+      // section footnote 1 was actually referenced in). Expand that
+      // section first so the jump actually lands somewhere visible.
+      if (footnotesEl) {
+        footnotesEl.querySelectorAll('a.reversefootnote, a.footnote-backref').forEach(function (backlink) {
+          backlink.addEventListener('click', function (e) {
+            var href = backlink.getAttribute('href') || '';
+            if (href.charAt(0) !== '#') return;
+            var marker = document.getElementById(href.slice(1));
+            if (!marker) return;
+            var wrapper = marker.closest('.section-wrapper');
+            if (wrapper && wrapper.classList.contains('collapsed')) {
+              e.preventDefault();
+              var sectionToggle = wrapper.querySelector('.section-toggle');
+              if (sectionToggle) sectionToggle.click();
+              marker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          });
+        });
+      }
+    });
+  })();
+
+  // Footnote hover/focus preview: copies each footnote's own text onto its
+  // in-text marker (sup#fnref:N) as data-footnote-text, so _components.scss
+  // can show it in a CSS-only tooltip on hover — no click-to-bottom-of-page
+  // needed to read a footnote.
+  (function () {
+    document.querySelectorAll('.post-body sup[id^="fnref:"]').forEach(function (sup) {
+      var link = sup.querySelector('a[href^="#fn:"]');
+      if (!link) return;
+      var note = document.getElementById(link.getAttribute('href').slice(1));
+      if (!note) return;
+
+      var clone = note.cloneNode(true);
+      var backlink = clone.querySelector('.reversefootnote, .footnote-backref');
+      if (backlink) backlink.remove();
+
+      sup.setAttribute('tabindex', '0');
+      sup.setAttribute('data-footnote-text', clone.textContent.trim());
+    });
+  })();
+
+  // Left-edge "Contents" rail: one dot + full title per h2, with h3
+  // subsections nested underneath. A subsection list only shows while
+  // you're scrolled into that particular h2's section — switching to a
+  // different section hides it and reveals the new section's own
+  // subsections (if any). Scrolls along with the page like a normal
+  // element until it reaches near the top of the viewport, then stays
+  // pinned there. Clicking a title jumps straight to that heading.
+  (function () {
+    document.querySelectorAll('.post-body').forEach(function (postBody) {
+      var headingEls = Array.prototype.slice.call(postBody.querySelectorAll('h2, h3, h4'));
+      var h2Count = headingEls.filter(function (h) { return h.tagName === 'H2'; }).length;
+      if (h2Count < 2) return;
+
+      var nav = document.createElement('nav');
+      nav.className = 'section-rail';
+      nav.setAttribute('aria-label', 'Post sections');
+
+      var heading = document.createElement('div');
+      heading.className = 'section-rail-heading';
+      heading.textContent = 'contents';
+      nav.appendChild(heading);
+
+      function createRailItem(h, extraClass) {
+        var item = document.createElement('a');
+        item.className = 'section-rail-item ' + extraClass;
+        item.href = '#' + h.id;
+
+        var dot = document.createElement('span');
+        dot.className = 'section-rail-dot';
+
+        var label = document.createElement('span');
+        label.className = 'section-rail-label';
+        // h.textContent would include the "expand"/"collapse" toggle text
+        // for collapsible sections (the toggle button lives inside the
+        // heading), and any footnote marker number (e.g. "Edge
+        // security[^5]") — strip both out so the rail only shows the
+        // heading's own words.
+        var headingClone = h.cloneNode(true);
+        var toggleClone = headingClone.querySelector('.section-toggle');
+        if (toggleClone) toggleClone.remove();
+        headingClone.querySelectorAll('sup').forEach(function (sup) { sup.remove(); });
+        label.textContent = headingClone.textContent.trim();
+
+        item.appendChild(dot);
+        item.appendChild(label);
+
+        item.addEventListener('click', function (e) {
+          e.preventDefault();
+          // If this heading is inside a collapsed section (see the
+          // collapsible-sections script above), expand it first — otherwise
+          // an h3 target would be display:none and scrollIntoView would do
+          // nothing visible.
+          var sectionWrapper = h.closest('.section-wrapper');
+          if (sectionWrapper && sectionWrapper.classList.contains('collapsed')) {
+            var sectionToggle = sectionWrapper.querySelector('.section-toggle');
+            if (sectionToggle) sectionToggle.click();
+          }
+          h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        return item;
+      }
+
+      var groups = [];
+      var flatEntries = [];
+
+      headingEls.forEach(function (h) {
+        if (h.tagName === 'H2') {
+          var group = document.createElement('div');
+          group.className = 'section-rail-group';
+
+          var item = createRailItem(h, 'section-rail-item-h2');
+          group.appendChild(item);
+
+          var subitemsContainer = document.createElement('div');
+          subitemsContainer.className = 'section-rail-subitems';
+          group.appendChild(subitemsContainer);
+
+          nav.appendChild(group);
+
+          // h3Containers tracks each h3's own nested h4 list (below) so
+          // updateActive() can show/hide it independently of the h3
+          // list — h4s under the current h3 show, h4s under sibling h3s
+          // in the same h2 group stay hidden.
+          var groupData = { group: group, subitemsContainer: subitemsContainer, entries: [{ heading: h, item: item }], h3Containers: [], currentH3Data: null };
+          groups.push(groupData);
+          flatEntries.push({ heading: h, item: item });
+        } else if (h.tagName === 'H3') {
+          var lastGroup = groups[groups.length - 1];
+          if (!lastGroup) return;
+
+          var subItem = createRailItem(h, 'section-rail-item-h3');
+          lastGroup.subitemsContainer.appendChild(subItem);
+
+          var h4Container = document.createElement('div');
+          h4Container.className = 'section-rail-subitems-h4';
+          lastGroup.subitemsContainer.appendChild(h4Container);
+
+          var h3Data = { heading: h, container: h4Container, h4Headings: [] };
+          lastGroup.h3Containers.push(h3Data);
+          lastGroup.currentH3Data = h3Data;
+
+          lastGroup.entries.push({ heading: h, item: subItem });
+          flatEntries.push({ heading: h, item: subItem });
+        } else if (h.tagName === 'H4') {
+          var lastGroup = groups[groups.length - 1];
+          if (!lastGroup || !lastGroup.currentH3Data) return;
+
+          var subSubItem = createRailItem(h, 'section-rail-item-h4');
+          lastGroup.currentH3Data.container.appendChild(subSubItem);
+          lastGroup.currentH3Data.h4Headings.push(h);
+
+          lastGroup.entries.push({ heading: h, item: subSubItem });
+          flatEntries.push({ heading: h, item: subSubItem });
+        }
+      });
+
+      document.body.appendChild(nav);
+
+      // Scroll-linked position: starts aligned with where the post body
+      // itself begins (below the title, level with the expand-all button)
+      // so it's visible immediately, then tracks the page as you scroll —
+      // moving up along with it — until it hits 24px from the top of the
+      // viewport, where it stays pinned.
+      var minTop = 24;
+      var anchorDocTop = postBody.getBoundingClientRect().top + window.scrollY;
+
+      function updatePosition() {
+        var top = Math.max(minTop, anchorDocTop - window.scrollY);
+        nav.style.top = top + 'px';
+      }
+
+      // Sized as a ratio of the actual margin beside the centered page
+      // container, not hardcoded pixel lengths — so it always fits and
+      // stays visible on any screen, just scaling with however much room
+      // there happens to be. Of that margin: leftRatio is the gap kept
+      // from the screen edge, widthRatio is how much the rail itself
+      // takes up, and the rest (1 - leftRatio - widthRatio) is the gap
+      // kept before the post content starts.
+      var containerEl = postBody.closest('.container') || document.querySelector('.container');
+      var leftRatio = 0.18;
+      var widthRatio = 0.72;
+
+      function updateVisibility() {
+        if (!containerEl) return;
+        var margin = (window.innerWidth - containerEl.getBoundingClientRect().width) / 2;
+        if (margin <= 0) {
+          nav.style.display = 'none';
+          return;
+        }
+        nav.style.left = (margin * leftRatio) + 'px';
+        nav.style.maxWidth = (margin * widthRatio) + 'px';
+        nav.style.display = 'flex';
+      }
+
+      function updateActive() {
+        var scrollPos = window.scrollY + 120;
+        var activeIndex = 0;
+        flatEntries.forEach(function (entry, i) {
+          // An h3 inside a currently-collapsed section (see the
+          // collapsible-sections script above) has no layout box —
+          // offsetParent is null and offsetTop reports 0 — which would
+          // otherwise always satisfy the check below and win as "active"
+          // even at the very top of the page, before anything's expanded.
+          if (entry.heading.offsetParent === null) return;
+          if (entry.heading.offsetTop <= scrollPos) activeIndex = i;
+        });
+        var activeHeading = flatEntries[activeIndex].heading;
+
+        flatEntries.forEach(function (entry) {
+          entry.item.classList.toggle('active', entry.heading === activeHeading);
+        });
+
+        groups.forEach(function (g) {
+          var isActiveGroup = g.entries.some(function (entry) { return entry.heading === activeHeading; });
+          g.group.classList.toggle('active', isActiveGroup);
+
+          // An h3's own h4 list only shows while you're inside that
+          // specific h3 (its own heading or one of its h4 children is
+          // active) — not just anywhere in the parent h2's section, and
+          // not while a sibling h3's subsection is active. h4Headings.length
+          // check matters because an h3 with no h4 children still has an
+          // (empty) container — without this guard it could still be
+          // marked .active and show its margin-top as a blank gap even
+          // though it has nothing inside to display.
+          g.h3Containers.forEach(function (h3Data) {
+            var isActiveH3 = h3Data.h4Headings.length > 0 &&
+              (h3Data.heading === activeHeading || h3Data.h4Headings.indexOf(activeHeading) !== -1);
+            h3Data.container.classList.toggle('active', isActiveH3);
+          });
+        });
+      }
+
+      window.addEventListener('scroll', function () {
+        updatePosition();
+        updateActive();
+      }, { passive: true });
+      window.addEventListener('resize', function () {
+        updatePosition();
+        updateActive();
+        updateVisibility();
+      });
+
+      updatePosition();
+      updateActive();
+      updateVisibility();
+    });
+  })();
 </script>

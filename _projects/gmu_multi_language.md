@@ -1,6 +1,6 @@
 ---
 layout: project-detail
-title: multi-language security commit analysis
+title: Multi-language security commit analysis
 workplace: George Mason University
 date_range: 12/2023-08/2023
 categories: [placeholder category]

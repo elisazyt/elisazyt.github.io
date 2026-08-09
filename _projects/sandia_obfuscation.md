@@ -1,12 +1,12 @@
 ---
 layout: project-detail
-title: code obfuscation for LLM benchmarking
+title: Code obfuscation for LLM benchmarking
 workplace: Sandia National Laboratories
 date_range: 06/2026-present
 categories: [research]
-description: One-line placeholder description of your role and impact.
+description: Providing support for frontier LLM benchmarking per [Executive Order 14409](https://www.whitehouse.gov/presidential-actions/2026/06/promoting-advanced-artificial-intelligence-innovation-and-security/), with a partiular focus on generating and verifying obfuscated C++/Rust binaries via LLVM compilier passes.
 primary_tags: [c++, rust, bash]
-tags: [compilers, reverse engineering, virtualization]
+tags: [reverse engineering, compilers, docker, virtual machines]
 ---
 
 <!-- TODO: replace with your real experience -->

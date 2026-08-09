@@ -54,7 +54,11 @@ code {
   blockquote {
     line-height: 1.375;
     padding-left: 20px;
-    margin: 40px 0 40px -16px;
+    // No negative left margin: the tan border-left line lines up with the
+    // text above it, and padding-left is what indents the quote's own
+    // text inward from that line (previously the whole blockquote,
+    // border included, hung out to the left of the text column).
+    margin: 40px 0;
     border-left: $spacer-1 solid $color-border;
     font-style: italic;
 
@@ -64,7 +68,7 @@ code {
 
     @media (min-width: $breakpoint-lg) {
       padding-left: $spacer-3;
-      margin: $spacer-4 0 $spacer-4 -40px;
+      margin: $spacer-4 0;
       max-width: (11 / 10 * 100%);
 
       p {
@@ -92,6 +96,317 @@ code {
   dd {
     font-style: italic;
     margin-bottom: 0.5em;
+  }
+
+  // Smaller, more readable body copy for blog posts specifically — scoped
+  // as .prose.post-body (two classes + element beats .prose p's class+element
+  // specificity) so other .prose usage elsewhere (about page, project
+  // detail pages) is unaffected.
+  &.post-body {
+    // .py-4 (utilities.scss) puts 64px of padding above the content —
+    // too much; a small-but-real gap reads better than none at all.
+    // Matches .expand-all-toggle's margin-bottom (below) so the button
+    // stays equally spaced from the title and the first heading.
+    padding-top: $spacer-2 + 8px;
+    // Extra breathing room from the page's left edge, beyond .px-2 on the
+    // containing .container.
+    padding-left: $spacer-2;
+
+    p, ol, ul {
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    blockquote p {
+      font-size: 15px;
+
+      @media (min-width: $breakpoint-lg) {
+        font-size: 17px;
+      }
+    }
+  }
+
+  // Blockquotes (`> ...` in markdown) are collapsed by default on post
+  // pages. footer.html's script appends the .quote-toggle arrow to the end
+  // of the preceding paragraph (so it reads inline, right after the last
+  // word, rather than on its own line) and wraps the blockquote itself in
+  // .quote-wrapper — which still starts fresh on its own line as a block
+  // once expanded.
+  .quote-wrapper {
+    margin: 0 0 1.5em;
+
+    blockquote {
+      margin-top: 8px;
+    }
+
+    &.collapsed blockquote {
+      display: none;
+    }
+  }
+
+  // Drawn with CSS borders rather than a text glyph (the &#9656; character
+  // sat visibly low in its box on some fonts, reading as bottom-aligned
+  // with the text) — a border-triangle has no glyph-metric quirks.
+  .quote-toggle {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 9px solid transparent;
+    border-right: none;
+    border-bottom: 9px solid transparent;
+    border-left: 13px solid currentColor;
+    background: none;
+    padding: 0;
+    margin-left: 8px;
+    // line-height: 0 stops the button's own inline box (which, being a
+    // <button>, has an inherited line-height taller than the visual
+    // triangle) from adding invisible space below the shape — that
+    // leftover space, not the border-triangle itself, was what made it
+    // read as bottom-aligned even with vertical-align: middle.
+    line-height: 0;
+    vertical-align: middle;
+    color: $color-text-accent;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+
+    &:hover {
+      color: $color-accent;
+    }
+  }
+
+  // Keyed off the toggle's own aria-expanded attribute rather than a
+  // .quote-wrapper.expanded ancestor selector — the toggle now lives
+  // inside the preceding paragraph, not inside .quote-wrapper, so an
+  // ancestor-based selector would never match.
+  .quote-toggle[aria-expanded="true"] {
+    transform: rotate(90deg);
+  }
+
+  // Every h2 section after a post's first (intro) section is collapsed by
+  // default — footer.html wraps the h2 plus its body content, and inserts
+  // a .section-toggle button as h2's next sibling (not a child inside it),
+  // so it renders on its own line below the heading. The h2 stays visible
+  // either way; only .section-content (everything below the toggle, up to
+  // the next h2) hides when collapsed.
+  .section-wrapper {
+    &.collapsed .section-content {
+      display: none;
+    }
+  }
+
+  // Consistent gap between the toggle button and whatever comes first in
+  // the revealed content. Headings have their own margin-top (1em,
+  // _base.scss) which already gave a decent gap, but a plain paragraph
+  // has margin-top: 0, so the same section with body text as its first
+  // line sat flush against the toggle. padding-top here supplies that gap
+  // unconditionally; the first child's own margin-top is zeroed so a
+  // leading heading doesn't stack both and end up with double the space.
+  .section-content {
+    padding-top: 24px;
+
+    > *:first-child {
+      margin-top: 0;
+    }
+  }
+
+  // A small pill button below each collapsible h2 (not inline next to
+  // it) — a translucent pastel-periwinkle fill (bluer than
+  // $blob-lavender, per its own palette comment in _theme-light.scss:
+  // "blue-violet, between blue and lavender") with a darker shade of the
+  // same hue for legible text/arrow. Built as a <button> with nested
+  // <span>s (arrow drawn on the span, not the button) so there's no
+  // native button border to reset — a button's own default border was
+  // previously left un-reset on one side, showing up as a stray line next
+  // to the arrow shape.
+  // Same padding/gap/border-radius as .expand-all-toggle below — sized
+  // identically, just positioned differently (margin-top here vs.
+  // margin-bottom there).
+  .section-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    background: rgba($blob-periwinkle, 0.38);
+    border: 1px solid rgba($blob-periwinkle, 0.65);
+    border-radius: 14px;
+    padding: 5px 14px;
+    margin-top: 6px;
+    // Explicit rather than relying on inheritance — this button is a
+    // sibling of h2 (not nested inside it), but font-family: inherit
+    // (_base.scss's button reset) would otherwise pick up whatever
+    // ancestor happens to be nearest, which isn't guaranteed to be body
+    // text specifically.
+    font-family: $body-font-family;
+    // Matches .post-body p's font-size (below) — the same size as the
+    // body text this button reveals when clicked.
+    font-size: 17px;
+    line-height: 1;
+    color: darken($blob-periwinkle, 32%);
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+
+    &:hover {
+      color: darken($blob-periwinkle, 42%);
+      background: rgba($blob-periwinkle, 0.5);
+      border-color: darken($blob-periwinkle, 15%);
+    }
+  }
+
+  // line-height: 0 stops the arrow span's own inline box (taller than the
+  // visual triangle, since border-triangles have a 0-height content box)
+  // from adding invisible space below the shape — same fix already used
+  // for .quote-toggle above; that leftover space, not the triangle itself,
+  // is what reads as the arrow sitting lower than the label text next to it.
+  .section-toggle-arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    line-height: 0;
+    // Sized to match .section-toggle's now-larger (17px) text.
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 9px solid currentColor;
+    transition: transform 0.2s ease;
+  }
+
+  .section-toggle[aria-expanded="true"] .section-toggle-arrow {
+    transform: rotate(90deg);
+  }
+
+  // "Expand all" control at the top of a post, shown only when the post
+  // has at least one collapsible quote (see post.html). A small pill
+  // button (matches .section-toggle above and .filter-pill on
+  // /experience/) rather than bare arrow + text with no button chrome.
+  .expand-all-toggle {
+    background: rgba($blob-periwinkle, 0.38);
+    border: 1px solid rgba($blob-periwinkle, 0.65);
+    border-radius: 14px;
+    padding: 5px 14px;
+    // Matches .post-body's padding-top (space above this button, between
+    // it and the title) — and the immediately-following heading's own
+    // margin-top is zeroed out below, so this is the *only* spacing
+    // below the button too, keeping it visually centered between title
+    // and first heading instead of sitting closer to one side.
+    margin-bottom: $spacer-2 + 8px;
+    font-family: $body-font-family;
+    // Matches .post-body p's font-size — the same size as the body text
+    // this button reveals when clicked.
+    font-size: 17px;
+    line-height: 1;
+    // A darker, muted shade of the same periwinkle for the text — not a
+    // saturated "hot" color, just a deeper version of this same pastel.
+    color: darken($blob-periwinkle, 32%);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+
+    &:hover {
+      color: darken($blob-periwinkle, 42%);
+      background: rgba($blob-periwinkle, 0.5);
+      border-color: darken($blob-periwinkle, 15%);
+    }
+  }
+
+  // Drawn with CSS borders rather than a text glyph (the &#9656; character
+  // sat visibly low in its box on some fonts, reading as bottom-aligned
+  // even with line-height/align-items centering) — a border-triangle has
+  // no such glyph-metric quirks and centers cleanly by construction.
+  .expand-all-arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 9px solid currentColor;
+    transition: transform 0.2s ease;
+  }
+
+  .expand-all-toggle[data-state="expanded"] .expand-all-arrow {
+    transform: rotate(90deg);
+  }
+
+  // The first h2's own margin-top is zeroed out via JS (footer.html),
+  // not a CSS adjacent-sibling selector here — a post can have arbitrary
+  // content (e.g. an intro paragraph) between this button and that
+  // heading, so "+ h2" isn't reliably the immediate next sibling.
+
+  // Kramdown's footnote syntax ([^1] / [^1]: ...) output. Scoped as
+  // .prose.post-body .footnotes p (rather than plain .footnotes p) because
+  // .prose p and .prose.post-body p both have equal-or-higher specificity
+  // and would otherwise silently win and force this back to 17-24px.
+  .footnotes {
+    margin-top: $spacer-4;
+    padding-top: $spacer-2;
+    border-top: 1px solid $color-border;
+    font-size: 14px;
+    color: $color-body-text;
+
+    ol {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 0.5em;
+    }
+  }
+
+  // Hidden until at least one section is expanded (footer.html) — footnotes
+  // are shared across the whole post rather than scoped per-section, so
+  // showing them while everything's still collapsed would reference
+  // content that isn't visible yet.
+  .footnotes-hidden {
+    display: none;
+  }
+
+  &.post-body .footnotes ol,
+  &.post-body .footnotes p {
+    font-size: 14px;
+  }
+
+  // Back to the original pink family ($color-accent) rather than neutral
+  // gray, but darkened — plain $color-accent read as too pale/washed out
+  // next to body text for a small marker like this.
+  sup a.footnote {
+    color: darken($color-accent, 18%);
+    font-size: 0.7em;
+    // Headings (h1–h6) are bold by browser default, and font-weight
+    // inherits onto this link when the footnote marker sits inside one
+    // (e.g. "Edge security[^5]") — force it back to normal regardless of
+    // where the marker appears.
+    font-weight: normal;
+  }
+
+  // Hover/focus preview: footer.html copies each footnote's text into
+  // data-footnote-text on the sup marker, so hovering shows the note
+  // inline instead of forcing a jump to the bottom of the post.
+  sup[data-footnote-text] {
+    position: relative;
+    cursor: help;
+
+    &:hover::after,
+    &:focus-within::after {
+      content: attr(data-footnote-text);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: 260px;
+      margin-bottom: 6px;
+      background: $color-card-background;
+      border: 1px solid $color-border;
+      border-radius: 4px;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-style: normal;
+      line-height: 1.4;
+      color: $color-body-text;
+      text-align: left;
+      white-space: normal;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+      z-index: 10;
+    }
   }
 
   // Markdown tables
@@ -127,4 +442,137 @@ code {
     }
   }
 
+}
+
+// Post header's date row carries a 64px .mb-4 bottom margin from the
+// utilities stylesheet; trimmed down (two classes beats the plain .mb-4
+// utility) so the gap before the post body isn't so large.
+.post-meta.mb-4 {
+  margin-bottom: $spacer-1;
+}
+
+// Left-edge "Contents" rail of section titles for blog posts, built by
+// footer.html's script from the post's h2s. `left`/`max-width` are set
+// inline by that script as a ratio of the real margin beside the centered
+// page container (not hardcoded lengths), so it always fits and stays
+// visible regardless of screen size. `top`/`display` are also set inline:
+// it scrolls with the page until reaching 24px from the top of the
+// viewport, then stays pinned there.
+.section-rail {
+  display: none;
+  position: fixed;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  z-index: 20;
+}
+
+.section-rail-heading {
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $color-text-accent;
+}
+
+.section-rail-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+// h3 subsections: hidden until footer.html's script marks the group
+// containing the current scroll position as .active.
+.section-rail-subitems {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  padding-left: 17px;
+}
+
+.section-rail-group.active .section-rail-subitems {
+  display: flex;
+}
+
+// h4 subsections: nested one level deeper than h3, and hidden until
+// footer.html's script marks the h3 containing the current scroll
+// position (rather than just the parent h2 group) as .active — so only
+// the current h3's own h4 children show, not a sibling h3's.
+.section-rail-subitems-h4 {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  padding-left: 17px;
+}
+
+.section-rail-subitems-h4.active {
+  display: flex;
+}
+
+.section-rail-item-h3 .section-rail-dot {
+  width: 5px;
+  height: 5px;
+  margin-top: 6px;
+}
+
+.section-rail-item-h4 .section-rail-dot {
+  width: 4px;
+  height: 4px;
+  margin-top: 6px;
+}
+
+.section-rail-item-h4 .section-rail-label {
+  font-size: 10px;
+}
+
+.section-rail-item-h3 .section-rail-label {
+  font-size: 11px;
+}
+
+// Overrides the global `a` / `a:hover` underline-via-border-bottom (see
+// _base.scss) which would otherwise draw a line under each item.
+.section-rail-item,
+.section-rail-item:hover {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  text-decoration: none;
+  border-bottom: none;
+}
+
+.section-rail-dot {
+  width: 7px;
+  height: 7px;
+  margin-top: 5px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: $color-border;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.section-rail-item:hover .section-rail-dot,
+.section-rail-item.active .section-rail-dot {
+  background: $color-accent;
+  transform: scale(1.3);
+}
+
+.section-rail-label {
+  font-size: 12px;
+  line-height: 1.35;
+  color: $color-text-accent;
+  white-space: normal;
+  word-break: break-word;
+  transition: color 0.2s ease;
+}
+
+.section-rail-item:hover .section-rail-label {
+  color: $color-accent;
+}
+
+.section-rail-item.active .section-rail-label {
+  color: $color-title;
+  font-weight: bold;
 }

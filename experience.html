@@ -15,13 +15,9 @@ order: 2
       <a class="card no-underline card-featured" href="{{ item.url | prepend: site.baseurl }}">
         <h3 class="mb-1">{{ item.title }}</h3>
         <p class="card-description mb-1">{{ item.description }}</p>
-        {% if item.tags or item.primary_tags %}
         <div class="tag-list">
           {% for tag in item.primary_tags %}<span class="tag-primary">{{ tag }}</span>{% endfor %}
           {% for tag in item.tags %}<span>{{ tag }}</span>{% endfor %}
-        </div>
-        {% endif %}
-        <div class="timeline-see-more-row">
           <span class="timeline-see-more">see more &rarr;</span>
         </div>
       </a>
@@ -71,12 +67,8 @@ order: 2
         <div class="tag-list">
           {% for tag in job.primary_tags %}<span class="tag-primary">{{ tag }}</span>{% endfor %}
           {% for tag in job.tags %}<span>{{ tag }}</span>{% endfor %}
+          {% if job.see_more %}<span class="timeline-see-more">see more &rarr;</span>{% endif %}
         </div>
-        {% if job.see_more %}
-        <div class="timeline-see-more-row">
-          <span class="timeline-see-more">see more &rarr;</span>
-        </div>
-        {% endif %}
       {% if job.see_more %}
       </a>
       {% else %}

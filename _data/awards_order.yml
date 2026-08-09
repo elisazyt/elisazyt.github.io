@@ -2,14 +2,15 @@
 # and the award order within each category (list order) on /about/.
 # List each award by its _awards filename (no extension). Anything left
 # off this list won't show up.
-Research:
+Academic:
   - sts
   - davidson_fellow
-  - aixcc
-Academic:
   - presidential_scholar
+  - aixcc
   - aime
   - bmt_dhr
+
+# to do
 Dance:
   - dance_2022_solo
   - dance_2022_group

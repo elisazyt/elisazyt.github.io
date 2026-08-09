@@ -8,9 +8,23 @@ order: 4
 
   {% include page_heading.html %}
 
+  <!-- Edit the text below to change the intro above the post list — write
+       as many paragraphs as you want, blank line between each, same as
+       writing the bio in about.md. This block is run through markdownify,
+       so **bold**, links, etc. all work too. -->
+  {% capture thoughts_intro %}
+
+  {% endcapture %}
+  <div class="section-subtext">{{ thoughts_intro | markdownify }}</div>
+  Below are some structured writeups of my thoughts on recent developments in AI security and related fields, and their implications
+  across research, industry, and government.
   <div class="py-2">
-    {% for post in site.posts %}
-      {% include post_block.html %}
+    {% for slug in site.data.thoughts_order %}
+      {% assign matches = site.posts | where_exp: "item", "item.path contains slug" %}
+      {% assign post = matches | first %}
+      {% if post %}
+        {% include post_block.html %}
+      {% endif %}
     {% endfor %}
   </div>
 

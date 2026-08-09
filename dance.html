@@ -8,6 +8,20 @@ order: 5
 
   {% include page_heading.html %}
 
+  <div class="carousel">
+    <button class="carousel-arrow carousel-arrow-left" aria-label="Previous photo">&#8249;</button>
+    <div class="carousel-track-wrap">
+      <div class="carousel-track">
+        {% for photo in site.data.dance_photos %}
+        <div class="carousel-slide">
+          <img src="{{ '/assets/pics_vids/dance/web/' | append: photo | relative_url }}" alt="">
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <button class="carousel-arrow carousel-arrow-right" aria-label="Next photo">&#8250;</button>
+  </div>
+
   <!-- TODO: replace these placeholder swatches with real images, e.g. <img src="..."> -->
   <div class="card-grid mb-4 py-2">
     {% for piece in site.data.art %}

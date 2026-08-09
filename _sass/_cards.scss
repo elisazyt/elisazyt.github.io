@@ -70,11 +70,6 @@
   }
 }
 
-.skill-icon {
-  font-size: 28px;
-  margin-bottom: $spacer-1;
-}
-
 .award-group {
   margin-bottom: $spacer-3;
 
@@ -91,10 +86,14 @@
   border-left: 3px solid $color-accent;
   padding: $spacer-1 $spacer-2;
   margin-bottom: $spacer-1;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 
+  // Matches .timeline-card's hover treatment (_sections.scss) — a lift +
+  // shadow reads as a much more noticeable "pop" than a border-color
+  // shift alone. Left border color intentionally left unchanged on hover.
   &:hover {
-    border-left-color: $color-accent-bright;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px) scale(1.01);
   }
 }
 
@@ -154,19 +153,6 @@
   margin-top: $spacer-1 * 0.5;
 }
 
-.card .skill-list {
-  list-style: none;
-  padding-left: 0;
-  font-size: 14px;
-  margin-bottom: 0;
-
-  li {
-    padding: 2px 0;
-    color: $color-body-text;
-    margin-bottom: 0;
-  }
-}
-
 .tag-list span {
   display: inline-block;
   font-size: 14px;
@@ -191,4 +177,59 @@
   aspect-ratio: 4 / 3;
   background: linear-gradient(135deg, $tan, $blush);
   border-radius: 4px;
+}
+
+.carousel {
+  display: flex;
+  align-items: center;
+  gap: $spacer-1;
+  margin: 0 (-$spacer-2) $spacer-3;
+}
+
+.carousel-track-wrap {
+  overflow: hidden;
+  flex: 1;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 2px;
+  transition: transform 0.4s ease;
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+
+  @media (min-width: $breakpoint-lg) {
+    flex: 0 0 calc(33.333% - 2px);
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 5304 / 7952; // DSC06366.jpg's native ratio
+    max-height: 55vh; // keeps the tall portrait crop from dominating the viewport
+    object-fit: cover;
+    border-radius: 4px;
+  }
+}
+
+.carousel-arrow {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  color: $color-text-accent;
+  font-size: 22px;
+  line-height: 1;
+  opacity: 0.45;
+  cursor: pointer;
+  transition: opacity 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+    color: $color-accent;
+  }
 }

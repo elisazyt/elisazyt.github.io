@@ -9,40 +9,6 @@ order: 1
 
 Placeholder bio — a couple of paragraphs about your background, what you work on, and what you care about.
 
-## Skills & Stack
-
-<!-- TODO: replace categories, icons, and skills with your real stack -->
-
-<div class="card-grid mb-4">
-  <div class="card">
-    <div class="skill-icon">⭐</div>
-    <h3 class="mb-1">Category One</h3>
-    <ul class="skill-list">
-      <li>Skill One</li>
-      <li>Skill Two</li>
-      <li>Skill Three</li>
-    </ul>
-  </div>
-  <div class="card">
-    <div class="skill-icon">✦</div>
-    <h3 class="mb-1">Category Two</h3>
-    <ul class="skill-list">
-      <li>Skill One</li>
-      <li>Skill Two</li>
-      <li>Skill Three</li>
-    </ul>
-  </div>
-  <div class="card">
-    <div class="skill-icon">◆</div>
-    <h3 class="mb-1">Category Three</h3>
-    <ul class="skill-list">
-      <li>Skill One</li>
-      <li>Skill Two</li>
-      <li>Skill Three</li>
-    </ul>
-  </div>
-</div>
-
 ## Awards & Honors
 
 <!-- Add/remove entries by adding a file to _awards/ — see existing ones for

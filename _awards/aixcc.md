@@ -1,5 +1,5 @@
 ---
-title: "AI Cyber Challenge Semifinalist"
+title: "AIxCC Semifinalist"
 organization: "Defense Advanced Research Projects Agency (DARPA)"
 year: "2024"
 category: "Research"
