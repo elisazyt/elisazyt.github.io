@@ -34,6 +34,38 @@
   margin: 12px 0;
 }
 
+// thoughts.html embeds two full posts on one page; their titles are
+// mid-page section markers rather than the page's own headline, so scale
+// them down further than a normal post page's 64px — enough that a title
+// like "Open problems in the field of AI security" fits on one line.
+.thoughts-page .post-header h1.h0 {
+  font-size: 48px;
+}
+
+// A tiny bit more breathing room between the intro block's closing line
+// and the first post's title than .section-subtext p's own 0 (its
+// :last-child rule, above) — enough to read as a gap, not a full section
+// break.
+.thoughts-page .section-subtext p:last-child {
+  margin-bottom: 0.7em;
+}
+
+// Thin rule between the two embedded posts on thoughts.html, marking
+// the boundary without the weight of a full section divider. The first
+// post's own .post-body already carries 64px of bottom padding (py-4,
+// shared with single-post pages) and the second's title carries its own
+// top margin — pull both in specifically here so the divider doesn't sit
+// in an oversized gap, without touching those shared rules elsewhere.
+.thoughts-post-divider {
+  border: none;
+  border-top: 1px solid $color-border;
+  margin: $spacer-2 + 8px 0;
+}
+
+.thoughts-page .post-body {
+  padding-bottom: $spacer-2;
+}
+
 // Same reasoning for blog post titles — 96px is too dominant above a page
 // of body text.
 .post-header {
@@ -122,64 +154,67 @@
     margin-bottom: 0;
   }
 
+  // post.description (post_block.html) is markdownify'd, so a
+  // multi-paragraph description generates multiple <p>s here — give them
+  // breathing room between each other, but not after the last one.
+  &-description p {
+    margin-bottom: 0.6em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   // Section-name outline (post.sections in front matter, up to 3 levels
-  // deep — post_block.html). Top level is a real 2-column grid — label
-  // column | subsections column — rather than flexbox, specifically so
-  // the subsections column starts at the same x position on every row
-  // regardless of how long each section's own name is ("Context" is
-  // shorter than "Important research directions", so a flexbox row-by-row
-  // layout would indent its subsections less far right — grid sizes the
-  // column to the widest label across *all* rows, not per row). Each
-  // top-level <li> uses display: contents so its <a> and <ul> become
-  // direct grid children instead of starting their own nested box — that
-  // only works because post_block.html always emits the <ul> (even empty)
-  // for every section, keeping exactly 2 grid items per row.
-  //
-  // Deeper levels (subsection → sub-subsection) stay flexbox, nested
-  // inside their own grid cell — same "row = label + children-to-right,
-  // connected by a left border" idea, just not grid-aligned against
-  // *other* subsections' own sub-subsections, since that's a much less
-  // visible alignment gap than the top-level one this fixes.
+  // deep — post_block.html) — a plain vertical bulleted list, everything
+  // reading straight up and down rather than subsections branching off to
+  // the right of their section. Depth is shown by indentation (padding-
+  // left compounds naturally through the nested <ul>s) and by a small dot
+  // marker per item — bigger/darker for a top-level section, smaller/
+  // lighter for a subsection, lighter still for a sub-subsection — same
+  // dot-marker language as .section-rail-dot elsewhere on the site.
   &-contents {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    align-items: start;
-    row-gap: 10px;
-    column-gap: 14px;
     margin-top: 16px;
     padding-left: 0;
     list-style: none;
 
-    // Top-level <li>s dissolve so their <a> + <ul> become direct grid
-    // children (see comment above). Deeper <li>s (inside a nested <ul>)
-    // keep the row layout: own link, then its children to the right.
-    > li {
-      display: contents;
+    li {
+      position: relative;
+      margin-bottom: 8px;
+      padding-left: 18px;
     }
 
-    ul li {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
+    li::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 0.6em;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: $color-border;
+      transform: translate(-50%, -50%);
     }
 
     ul {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-left: 2px;
-      padding-left: 12px;
-      border-left: 2px solid $color-border;
+      margin-top: 6px;
+      padding-left: 4px;
       list-style: none;
+
+      // post_block.html always emits this <ul>, even empty, for a
+      // section with no subsections — without this, an empty one would
+      // still show its own margin-top as a small stray gap.
+      &:empty {
+        margin-top: 0;
+      }
     }
 
-    // Plain text links, not pills/buttons — color/weight step down one
-    // level at a time so depth still reads clearly without needing a
-    // box around each item. Raised above .post-preview-title-link's
-    // full-card stretched overlay (higher z-index + position so it
-    // actually establishes a stacking context) so these remain
-    // independently clickable instead of the card-wide link swallowing
-    // the click.
+    // Plain text links, not pills/buttons — color/weight/marker size step
+    // down one level at a time so depth still reads clearly. Raised above
+    // .post-preview-title-link's full-card stretched overlay (higher
+    // z-index + position so it actually establishes a stacking context)
+    // so these remain independently clickable instead of the card-wide
+    // link swallowing the click.
     a {
       position: relative;
       z-index: 2;
@@ -201,8 +236,22 @@
       font-weight: 400;
     }
 
+    ul li {
+      margin-bottom: 6px;
+    }
+
+    ul li::before {
+      width: 5px;
+      height: 5px;
+    }
+
     ul ul a {
       font-size: 12px;
+    }
+
+    ul ul li::before {
+      width: 4px;
+      height: 4px;
     }
   }
 }
@@ -473,14 +522,14 @@ header ul li a:hover {
 
 // Featured Project cards — matches the timeline-card's proportions
 // (title/description/tag sizes) so both sections read consistently.
-// Widened to 2-per-row (instead of .card's default 3-per-row) so the
-// two featured cards together span the full container width.
+// 3-per-row (matches .card's default) — one row for the three featured
+// cards instead of two wrapping to a third row by themselves.
 .card-featured {
   display: flex;
   flex-direction: column;
 
   @media (min-width: $breakpoint-lg) {
-    width: calc(50% - #{$spacer-2});
+    width: calc(33.333% - #{$spacer-2});
   }
 
   h3 {
@@ -517,6 +566,52 @@ header ul li a:hover {
   &:last-child {
     margin-bottom: 0;
   }
+}
+
+// Bullets inside the intro block: base reset zeroes ul padding/margin
+// sitewide, which (with the browser's default outside marker position)
+// pushes the bullet character left of the text column entirely. The dot
+// itself sits flush with the paragraphs above/below (and, on
+// thoughts.html, the post title via the padding-left below); list text
+// is indented past it, like an ordinary bullet list.
+.section-subtext ul {
+  list-style: none;
+  margin: 0.3em 0 1em;
+  padding-left: 0;
+}
+
+.section-subtext li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 0.35em;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.section-subtext li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: $color-text-accent;
+  transform: translate(-50%, -50%);
+}
+
+// thoughts.html: the embedded posts' own titles carry an extra $spacer-2
+// (.post-header, below) that neither the page's own "thoughts" title nor
+// the intro block have, so without this they'd sit 16px left of "Open
+// problems...". Match it on both so everything — page title, intro text,
+// and post titles — lines up on one left edge. The bullet dot's negative
+// offset (above) still has room to sit inside this gutter instead of
+// overflowing the page edge.
+.thoughts-page .section-subtext,
+.thoughts-page .thoughts-title {
+  padding-left: $spacer-2;
 }
 
 // Also scoped as .prose .section-subtext for the same specificity reason

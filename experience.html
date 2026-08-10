@@ -6,8 +6,8 @@ order: 2
 ---
 
 <div class="mb-2">
-  <h2 class="mt-0">Featured Projects</h2>
-  <div class="card-grid mb-4 py-2">
+  <h2 class="mt-0">Featured Projects and Publications</h2>
+  <div class="card-grid mb-4 py-1">
     {% for slug in site.data.featured_projects %}
       {% assign matches = site.projects | where_exp: "item", "item.path contains slug" %}
       {% assign item = matches | first %}

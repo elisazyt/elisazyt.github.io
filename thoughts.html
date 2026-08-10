@@ -4,28 +4,75 @@ title: thoughts
 permalink: /thoughts/
 order: 4
 ---
+
+{% assign security_post = site.posts | where_exp: "item", "item.path contains 'ai-security'" | first %}
+{% assign policy_post = site.posts | where_exp: "item", "item.path contains 'ai-policy-etc'" | first %}
+
+<div class="thoughts-page">
 <div class="container mx-auto px-2">
-
-  {% include page_heading.html %}
-
-  <!-- Edit the text below to change the intro above the post list — write
-       as many paragraphs as you want, blank line between each, same as
-       writing the bio in about.md. This block is run through markdownify,
-       so **bold**, links, etc. all work too. -->
+  <div class="mt-2 mb-2 clearfix header-text thoughts-title">
+    <h1 class="h0 inline-block py-1 mt-1 header-title">thoughts</h1>
+    <div class="title-divider-dotted"></div>
+  </div>
   {% capture thoughts_intro %}
+  Below is a somewhat structured writeup of my thoughts on recent developments in AI security and related fields.
 
+  - **For a more research-oriented perspective, see [open problems in the field of AI security](#{{ security_post.title | slugify }}).**
+  - **For a more governance-oriented perspective, skip to [AI policy, national security, and minimizing real-world risk](#{{ policy_post.title | slugify }}).**
+
+  A google doc version of this content is available [here](https://docs.google.com/document/d/1LcrKwfMhU7D9wY_Y4d4fkpILa6bFPDX3FYV5zJMHCYU/edit?tab=t.9asrj7olvo45#heading=h.5h4ls77jdlu).
+  The ordering of the sections reflects what I think is the most logical flow of reasoning, but each section can also be read as a standalone.
+
+
+  *Everything below reflects my thoughts and opinions as of July 2026. All thoughts and interpretations are my own and not AI-generated.*
   {% endcapture %}
   <div class="section-subtext">{{ thoughts_intro | markdownify }}</div>
-  Below are some structured writeups of my thoughts on recent developments in AI security and related fields, and their implications
-  across research, industry, and government.
-  <div class="py-2">
-    {% for slug in site.data.thoughts_order %}
-      {% assign matches = site.posts | where_exp: "item", "item.path contains slug" %}
-      {% assign post = matches | first %}
-      {% if post %}
-        {% include post_block.html %}
-      {% endif %}
-    {% endfor %}
+  {% if security_post %}
+  <hr class="thoughts-post-divider">
+  {% endif %}
+</div>
+
+{% if security_post %}
+<article class="container mx-auto px-2" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="mt-2 mb-0 clearfix header-text post-header">
+    <h1 id="{{ security_post.title | slugify }}" class="h0 inline-block header-title">{{ security_post.title }}</h1>
   </div>
 
+  <div class="prose post-body py-4" itemprop="articleBody">
+      {% assign h2_count = security_post.content | split: "<h2" | size | minus: 1 %}
+      {% if security_post.content contains "<blockquote" or h2_count > 1 %}
+      <button type="button" class="expand-all-toggle" data-state="collapsed">
+        <span class="expand-all-arrow"></span>
+        <span class="expand-all-label">expand all</span>
+      </button>
+      {% endif %}
+      {{ security_post.content }}
+  </div>
+</article>
+{% endif %}
+
+{% if security_post and policy_post %}
+<div class="container mx-auto px-2">
+  <hr class="thoughts-post-divider">
+</div>
+{% endif %}
+
+{% if policy_post %}
+<article class="container mx-auto px-2" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="mt-2 mb-0 clearfix header-text post-header">
+    <h1 id="{{ policy_post.title | slugify }}" class="h0 inline-block header-title">{{ policy_post.title }}</h1>
+  </div>
+
+  <div class="prose post-body py-4" itemprop="articleBody">
+      {% assign h2_count = policy_post.content | split: "<h2" | size | minus: 1 %}
+      {% if policy_post.content contains "<blockquote" or h2_count > 1 %}
+      <button type="button" class="expand-all-toggle" data-state="collapsed">
+        <span class="expand-all-arrow"></span>
+        <span class="expand-all-label">expand all</span>
+      </button>
+      {% endif %}
+      {{ policy_post.content }}
+  </div>
+</article>
+{% endif %}
 </div>

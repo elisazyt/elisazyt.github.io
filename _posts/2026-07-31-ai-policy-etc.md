@@ -1,7 +1,9 @@
 ---
 layout: post
 title: "AI policy, national security, and minimizing real-world risk"
-description: "todo"
+description: |
+    todo
+
 sections:
   - title: Why I care
   - title: "Defining red lines: government vs. model providers"
@@ -16,14 +18,11 @@ sections:
       - title: Dangers of open weights
 ---
 
-*Everything below reflects my thoughts and opinions as of July 2026. All thoughts and interpretations are my own and not AI-generated.* \
-*A google doc of this content is available [here](https://docs.google.com/document/d/1LcrKwfMhU7D9wY_Y4d4fkpILa6bFPDX3FYV5zJMHCYU/edit?tab=t.2jdgmk6jx48b#heading=h.77tlvj46l6mu).*
-
 ## Why I care
 
 As a researcher spending much of my time thinking about AI security and security-adjacent topics, I often find myself so focused on theoretical problems that I forget they’re tied to actual human lives. I think it’s important to remember that the majority of the human population doesn’t live in the mental headspace that many AI/ML researchers seem to occupy nowadays, where their biggest concern is the concept of a future evil superintelligent being bringing mass irreversible job displacement, societal upheaval and disillusionment, and eventually human demise. For the average human, their concerns are about things that directly impact their present-day lives: having clean drinking water, affordable power bills, not dying in wars, etc. However, AI development is already shaping these things in ways that most may not realize. I believe those of us who understand this technology are responsible for ensuring things go well in the real world, which means we can’t spend all day stuck in our heads worrying about an unpredictable future. AI risk is not just a research problem anymore, or even a domestic or national security issue. It’s now about international safety standards, warfare, and humanity at large. As such, I hope that even the most technically oriented people in AI security and safety nowadays can explain—and more importantly, care about—how their work advances something concrete that the world needs.
 
-For some more context, my background is mainly in technical AI/cybersecurity research. However, I’ve also done some governance and technical work with implications in AI safety and security policy at the state and national levels. The process of actually doing and reflecting upon these types of work has shaped many of my current views. Particularly, I used to think that maximizing my impact on the world meant devoting my soul to technical research, but I don’t think that’s true anymore. Throughout history, the government has intervened and shaped the course of technological development time and time again, and AI won’t be the exception. As such, I feel obligated to divert some of my attention to understanding where my work fits into the policy and national security landscape, if not engaging with or even directly participating in it.
+Though my background is mainly in technical AI/cybersecurity research, I’ve also done some governance and technical work tied to AI safety and security policy at the state and national levels. The process of actually doing and reflecting upon these types of work has shaped many of my current views. Particularly, I used to think that maximizing my impact on the world meant devoting my soul to technical research, but I don’t think that’s true anymore. Throughout history, the government has intervened and shaped the course of technological development time and time again, and AI won’t be the exception. As such, I feel obligated to divert some of my attention to understanding where my work fits into the policy and national security landscape, if not engaging with or even directly participating in it.
 
 Note that I bring up a lot of my own concerns and perspectives below, but these are all complex issues and proposing solutions to them is out of my scope. I'm currently just an undergrad with essentially no influence over how any of this plays out. Until I'm in a position to give meaningful input, I hope the people who do have both the technical background and influence will push for decisions driven not by the competitive and profit-maximizing interests of a small group of actors, but rather by what's best for a safe and democratic world.
 

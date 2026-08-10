@@ -29,16 +29,11 @@ sections:
   - title: Note on AI security and safety
 ---
 
-*Everything below reflects my thoughts and opinions as of July 2026. All thoughts and interpretations are my own and not AI-generated.* \
-*A google doc of this content is available [here](https://docs.google.com/document/d/1LcrKwfMhU7D9wY_Y4d4fkpILa6bFPDX3FYV5zJMHCYU/edit?tab=t.9asrj7olvo45#heading=h.5h4ls77jdlu).*
-
 ## Preface
 
 Everything here was written on my own time out of pure interest; while inspired by some of my past research, it is not affiliated with any institution or project. This content is based on an extended period of sporadic reading and going down random rabbit holes, so it is not 100% comprehensive or representative of all major trends and opinions in the field of cyber (and particularly AI) security.
 
 For context, I first entered the field of cybersecurity in 2022 and have found it to be an incredibly broad and important field of research, so it's exciting to see the recent influx of people giving it the attention that it deserves. It's unfortunate that it only happened in light of many concerning advances in AI, but I suppose that's how it usually goes down with important problems in history. It really is fascinating and terrifying how much AI has changed the security landscape over the past year, especially in comparison to the years before where progress was mainly bottlenecked by human research speed and capabilities. Even staying up to date with the state of the art in cybersecurity is difficult now, but I've still attempted to consolidate some of the major happenings and my thoughts on what's most important going forward.
-
-Note: The ordering of the sections reflects what I think is the most logical flow of reasoning, but each section can also be read as a standalone.
 
 ## Context
 

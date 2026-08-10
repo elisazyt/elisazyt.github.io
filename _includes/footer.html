@@ -331,10 +331,35 @@
   // subsections (if any). Scrolls along with the page like a normal
   // element until it reaches near the top of the viewport, then stays
   // pinned there. Clicking a title jumps straight to that heading.
+  //
+  // One shared rail spans *every* .post-body on the page (rather than a
+  // separate rail per post) — on a page embedding multiple full posts
+  // (e.g. thoughts.html), this reads as one combined table of contents,
+  // with a label marking where each post's own section starts, instead of
+  // switching between entirely separate rails as you scroll past each
+  // post's boundary.
   (function () {
-    document.querySelectorAll('.post-body').forEach(function (postBody) {
-      var headingEls = Array.prototype.slice.call(postBody.querySelectorAll('h2, h3, h4'));
-      var h2Count = headingEls.filter(function (h) { return h.tagName === 'H2'; }).length;
+    var postBodies = Array.prototype.slice.call(document.querySelectorAll('.post-body'));
+    if (!postBodies.length) return;
+
+    function getPostTitle(postBody) {
+      var header = postBody.previousElementSibling;
+      var h1 = header && header.querySelector && header.querySelector('h1');
+      return h1 ? h1.textContent.trim() : '';
+    }
+
+    // Collect every heading from every post-body, in document order, each
+    // tagged with which post-body it came from so a "new post" boundary
+    // can be detected while building the rail below.
+    var headingEls = [];
+    postBodies.forEach(function (postBody) {
+      Array.prototype.slice.call(postBody.querySelectorAll('h2, h3, h4')).forEach(function (h) {
+        headingEls.push({ el: h, postBody: postBody });
+      });
+    });
+
+    (function () {
+      var h2Count = headingEls.filter(function (e) { return e.el.tagName === 'H2'; }).length;
       if (h2Count < 2) return;
 
       var nav = document.createElement('nav');
@@ -389,8 +414,25 @@
 
       var groups = [];
       var flatEntries = [];
+      var lastPostBody = null;
 
-      headingEls.forEach(function (h) {
+      headingEls.forEach(function (entry) {
+        var h = entry.el;
+
+        // A new post started (only meaningful once there's more than one
+        // .post-body on the page) — drop in a label before its first
+        // heading so the combined rail still shows where one post ends
+        // and the next begins.
+        if (entry.postBody !== lastPostBody) {
+          lastPostBody = entry.postBody;
+          if (postBodies.length > 1) {
+            var postLabel = document.createElement('div');
+            postLabel.className = 'section-rail-post-label';
+            postLabel.textContent = getPostTitle(entry.postBody);
+            nav.appendChild(postLabel);
+          }
+        }
+
         if (h.tagName === 'H2') {
           var group = document.createElement('div');
           group.className = 'section-rail-group';
@@ -443,13 +485,20 @@
 
       document.body.appendChild(nav);
 
-      // Scroll-linked position: starts aligned with where the post body
-      // itself begins (below the title, level with the expand-all button)
-      // so it's visible immediately, then tracks the page as you scroll —
+      // Scroll-linked position: starts aligned right below the page's own
+      // title (.header-text — matches both a plain page's title block and
+      // _layouts/post.html's own .post-header, so document.querySelector
+      // finds whichever title comes first: on a single-post page that's
+      // the post's own title; on a page with content above the post(s),
+      // like thoughts.html's "thoughts" heading, it's that one) so
+      // it's visible immediately, then tracks the page as you scroll —
       // moving up along with it — until it hits 24px from the top of the
       // viewport, where it stays pinned.
       var minTop = 24;
-      var anchorDocTop = postBody.getBoundingClientRect().top + window.scrollY;
+      var firstPostBody = postBodies[0];
+      var lastPostBodyEl = postBodies[postBodies.length - 1];
+      var titleEl = document.querySelector('.header-text') || firstPostBody;
+      var anchorDocTop = titleEl.getBoundingClientRect().bottom + window.scrollY;
 
       function updatePosition() {
         var top = Math.max(minTop, anchorDocTop - window.scrollY);
@@ -463,12 +512,30 @@
       // from the screen edge, widthRatio is how much the rail itself
       // takes up, and the rest (1 - leftRatio - widthRatio) is the gap
       // kept before the post content starts.
-      var containerEl = postBody.closest('.container') || document.querySelector('.container');
+      var containerEl = firstPostBody.closest('.container') || document.querySelector('.container');
       var leftRatio = 0.18;
       var widthRatio = 0.72;
 
       function updateVisibility() {
         if (!containerEl) return;
+
+        // Visible from the very top of the page onward (even before
+        // scrolling down into the first post — see updateActive() below,
+        // which keeps everything unhighlighted until then) — only hidden
+        // once scrolled past the *combined* span of every post-body
+        // sharing this rail, i.e. past the last post's bottom. Recomputed
+        // fresh each call (rather than cached once) since a post-body's
+        // own height changes as sections expand/collapse, which would
+        // otherwise throw this off. Uses the same scrollPos reference
+        // point as updateActive() below.
+        var endRect = lastPostBodyEl.getBoundingClientRect();
+        var spanBottom = endRect.bottom + window.scrollY;
+        var scrollPos = window.scrollY + 120;
+        if (scrollPos >= spanBottom) {
+          nav.style.display = 'none';
+          return;
+        }
+
         var margin = (window.innerWidth - containerEl.getBoundingClientRect().width) / 2;
         if (margin <= 0) {
           nav.style.display = 'none';
@@ -481,6 +548,26 @@
 
       function updateActive() {
         var scrollPos = window.scrollY + 120;
+
+        // Before reaching even the first heading (e.g. still up in the
+        // page's own title/intro, above every post), nothing should be
+        // highlighted yet — otherwise the loop below defaults activeIndex
+        // to 0 and the first entry reads as "active" despite not having
+        // scrolled anywhere near it.
+        var firstHeadingEntry = flatEntries[0];
+        var reachedFirstHeading = firstHeadingEntry &&
+          firstHeadingEntry.heading.offsetParent !== null &&
+          scrollPos >= firstHeadingEntry.heading.offsetTop;
+
+        if (!reachedFirstHeading) {
+          flatEntries.forEach(function (entry) { entry.item.classList.remove('active'); });
+          groups.forEach(function (g) {
+            g.group.classList.remove('active');
+            g.h3Containers.forEach(function (h3Data) { h3Data.container.classList.remove('active'); });
+          });
+          return;
+        }
+
         var activeIndex = 0;
         flatEntries.forEach(function (entry, i) {
           // An h3 inside a currently-collapsed section (see the
@@ -520,6 +607,7 @@
       window.addEventListener('scroll', function () {
         updatePosition();
         updateActive();
+        updateVisibility();
       }, { passive: true });
       window.addEventListener('resize', function () {
         updatePosition();
@@ -530,6 +618,6 @@
       updatePosition();
       updateActive();
       updateVisibility();
-    });
+    })();
   })();
 </script>

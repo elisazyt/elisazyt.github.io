@@ -9,7 +9,10 @@
     <a class="post-preview-title-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
   </h2>
   {% if post.description %}
-  <p class="post-preview-description">{{ post.description }}</p>
+  <!-- post.description is run through markdownify, so it can be a
+       multi-paragraph YAML block scalar (see front matter comment in any
+       post) — same idea as thoughts.html's intro. -->
+  <div class="post-preview-description">{{ post.description | markdownify }}</div>
   {% else %}
   <p class="post-preview-description">{{ post.content | strip_html | truncatewords: 30 }}</p>
   {% endif %}

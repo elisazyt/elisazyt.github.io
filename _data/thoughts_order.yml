@@ -1,7 +1,0 @@
-# Manually defines the display order of _posts entries on /thoughts/ — top
-# to bottom, independent of each post's date. List each entry by its
-# filename (minus the date prefix and extension), e.g. the file
-# _posts/2026-05-01-first-post.md is listed as "first-post" below. Anything
-# left off this list won't show up.
-- ai-security
-- ai-policy-etc

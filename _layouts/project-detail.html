@@ -5,13 +5,14 @@ layout: default
 
   {% include page_heading.html %}
 
-  {% if page.tags %}
+  {% if page.primary_tags or page.tags %}
   <div class="tag-list mb-1">
+    {% for tag in page.primary_tags %}<span class="tag-primary">{{ tag }}</span>{% endfor %}
     {% for tag in page.tags %}<span>{{ tag }}</span>{% endfor %}
   </div>
   {% endif %}
 
-  <div class="prose mb-4 py-2">
+  <div class="prose mb-2 py-2">
     {{ content }}
   </div>
 

@@ -107,7 +107,7 @@ code {
     // too much; a small-but-real gap reads better than none at all.
     // Matches .expand-all-toggle's margin-bottom (below) so the button
     // stays equally spaced from the title and the first heading.
-    padding-top: $spacer-2 + 8px;
+    padding-top: $spacer-2 + 4px;
     // Extra breathing room from the page's left edge, beyond .px-2 on the
     // containing .container.
     padding-left: $spacer-2;
@@ -123,6 +123,13 @@ code {
       @media (min-width: $breakpoint-lg) {
         font-size: 17px;
       }
+    }
+
+    // h2's own margin-top (1em, _base.scss) works out to a full 32px here
+    // (h2's font-size is also 32px) — the gap between one section and the
+    // next. Slightly tighter reads better than a full 1em.
+    h2 {
+      margin-top: 24px;
     }
   }
 
@@ -224,11 +231,11 @@ code {
   .section-toggle {
     display: inline-flex;
     align-items: center;
-    gap: 11px;
+    gap: 10px;
     background: rgba($blob-periwinkle, 0.38);
     border: 1px solid rgba($blob-periwinkle, 0.65);
-    border-radius: 14px;
-    padding: 5px 14px;
+    border-radius: 13px;
+    padding: 4px 12px;
     margin-top: 6px;
     // Explicit rather than relying on inheritance — this button is a
     // sibling of h2 (not nested inside it), but font-family: inherit
@@ -236,9 +243,9 @@ code {
     // ancestor happens to be nearest, which isn't guaranteed to be body
     // text specifically.
     font-family: $body-font-family;
-    // Matches .post-body p's font-size (below) — the same size as the
-    // body text this button reveals when clicked.
-    font-size: 17px;
+    // Slightly smaller than .post-body p's own 17px — this is a control,
+    // not body copy.
+    font-size: 15px;
     line-height: 1;
     color: darken($blob-periwinkle, 32%);
     cursor: pointer;
@@ -261,10 +268,10 @@ code {
     width: 0;
     height: 0;
     line-height: 0;
-    // Sized to match .section-toggle's now-larger (17px) text.
-    border-top: 7px solid transparent;
-    border-bottom: 7px solid transparent;
-    border-left: 9px solid currentColor;
+    // Sized to match .section-toggle's text.
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 8px solid currentColor;
     transition: transform 0.2s ease;
   }
 
@@ -279,18 +286,18 @@ code {
   .expand-all-toggle {
     background: rgba($blob-periwinkle, 0.38);
     border: 1px solid rgba($blob-periwinkle, 0.65);
-    border-radius: 14px;
-    padding: 5px 14px;
+    border-radius: 13px;
+    padding: 4px 12px;
     // Matches .post-body's padding-top (space above this button, between
     // it and the title) — and the immediately-following heading's own
     // margin-top is zeroed out below, so this is the *only* spacing
     // below the button too, keeping it visually centered between title
     // and first heading instead of sitting closer to one side.
-    margin-bottom: $spacer-2 + 8px;
+    margin-bottom: $spacer-2 + 4px;
     font-family: $body-font-family;
-    // Matches .post-body p's font-size — the same size as the body text
-    // this button reveals when clicked.
-    font-size: 17px;
+    // Slightly smaller than .post-body p's own 17px — this is a control,
+    // not body copy.
+    font-size: 15px;
     line-height: 1;
     // A darker, muted shade of the same periwinkle for the text — not a
     // saturated "hot" color, just a deeper version of this same pastel.
@@ -316,9 +323,9 @@ code {
     display: inline-block;
     width: 0;
     height: 0;
-    border-top: 7px solid transparent;
-    border-bottom: 7px solid transparent;
-    border-left: 9px solid currentColor;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 8px solid currentColor;
     transition: transform 0.2s ease;
   }
 
@@ -473,6 +480,26 @@ code {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: $color-text-accent;
+}
+
+// Marks where a new post's own sections start, on a page where the rail
+// spans more than one post (footer.html) — a plain divider + title,
+// distinct from a .section-rail-group so it doesn't look like a
+// clickable section.
+.section-rail-post-label {
+  width: 100%;
+  padding-top: 10px;
+  margin-top: 4px;
+  border-top: 1px solid $color-border;
+  font-size: 12px;
+  font-weight: bold;
+  color: $color-title;
+
+  &:first-child {
+    padding-top: 0;
+    margin-top: 0;
+    border-top: none;
+  }
 }
 
 .section-rail-group {
