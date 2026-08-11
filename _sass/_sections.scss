@@ -34,6 +34,63 @@
   margin: 12px 0;
 }
 
+// Inline-embedded PDF (e.g. a poster) inside a project's description —
+// tall enough to read a portrait poster without excessive scrolling,
+// full-width and responsive, styled like the site's other bordered
+// panels (cards, code blocks) rather than a bare unstyled rectangle.
+// The #toolbar=0&navpanes=0 URL fragment (on the <iframe> src itself,
+// not here) hides the browser PDF viewer's download button and the
+// page-thumbnail sidebar.
+.poster-embed-wrapper {
+  position: relative; // anchors .poster-embed-open-link against this
+}
+
+.poster-embed {
+  display: block;
+  width: 100%;
+  height: 80vh;
+  max-height: 900px;
+  margin: 12px 0;
+  border: 1px solid $color-border;
+  border-radius: 6px;
+  background: $white;
+}
+
+// "Open in new tab" — icon-only (the standard "external link"
+// box-with-arrow glyph, no label), sitting over the embed's top-right
+// corner. The PDF viewer's own toolbar is hidden via the src fragment
+// above, so this is the only way to reach the file directly without
+// right-clicking. A translucent circle behind the icon (rather than bare
+// glyph color alone) keeps it visible against whatever part of the PDF
+// happens to render behind it, light or dark.
+.poster-embed-open-link {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba($white, 0.9);
+  border: 1px solid $color-border;
+  border-radius: 50%;
+  color: $color-body-text;
+  text-decoration: none;
+  transition: color 0.2s ease, border-color 0.2s ease;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    color: $color-accent;
+    border-color: $color-accent;
+  }
+}
+
 // thoughts.html embeds two full posts on one page; their titles are
 // mid-page section markers rather than the page's own headline, so scale
 // them down further than a normal post page's 64px — enough that a title
@@ -430,13 +487,15 @@ header ul li a:hover {
     transform: translateY(-2px) scale(1.01);
   }
 
+  // Matches .card-featured h3's own size above, so titles read
+  // consistently between the featured cards and this timeline list.
   h2 {
-    font-size: $h2-size * 0.8;
+    font-size: 22px;
   }
 
   // Overrides .prose ul/ol/p (from _components.scss), which would
   // otherwise force the bullet text to 24px — sized between the
-  // tags/date (10-13px) and the title (25.6px)
+  // tags/date (10-13px) and the title (22px)
   ul, ol, p {
     font-size: 16px;
   }
@@ -473,15 +532,67 @@ header ul li a:hover {
   background: none;
   border: none;
   font-size: 12px;
-  font-weight: 500;
-  // A true neutral gray rather than the palette's warm-tinted $gray/$black,
-  // which read as brownish here.
-  color: #999999;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  // Matches .card-featured-see-more's own color (Featured Projects cards)
+  // rather than the plain gray this used to be, so both read the same
+  // way as a call to action.
+  color: #767676;
   transition: color 0.2s ease;
 
   &:hover {
     color: $color-accent;
   }
+}
+
+// Featured Project cards' own "see more" — sits below the tags, as the
+// last element in the card. Reads as a clear CTA through typographic
+// treatment (uppercase, letter-spacing, a bold arrow that slides on
+// hover) rather than raw color contrast — no underline, no pitch-black
+// text, no button/pill shape. Not nested in .tag-list, so it doesn't
+// need the specificity bump to fight that class's generic tag-pill
+// styling.
+.card-featured-see-more {
+  // Grows to fill the leftover vertical space between the tags and the
+  // bottom of the card (which varies card to card, since .card-grid
+  // stretches every featured card in a row to match the tallest one) and
+  // centers its text within that space, rather than sitting flush under
+  // the tags regardless of how much room is actually left below them.
+  //
+  // padding-top biases the centered text a bit further from the tags
+  // than from the card's bottom edge — measured dead-center (equal
+  // pixel gap above/below) still read as sitting closer to the tags,
+  // since their dense colored pills visually pull the eye more than the
+  // plain background below, so true 50/50 centering doesn't look
+  // centered.
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding-top: 16px;
+  min-height: 24px;
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #767676;
+
+  &:hover {
+    color: $color-accent;
+  }
+}
+
+.timeline-see-more-arrow {
+  display: inline-block;
+  font-weight: 700;
+  transition: transform 0.2s ease;
+}
+
+.card-featured:hover .timeline-see-more-arrow {
+  transform: translateX(4px);
 }
 
 // The category badge(s) — sit as rectangular tabs flush on top of the
@@ -533,15 +644,26 @@ header ul li a:hover {
   }
 
   h3 {
-    font-size: $h2-size * 0.8;
+    font-size: 22px;
   }
 
-  // Pushes the tags (and the see-more row right after them) down to the
-  // bottom of the card, so both stay aligned across cards of uneven
-  // description length instead of trailing right after the text.
-  .tag-list {
-    margin-top: auto;
+  // Same italic/size/color treatment as .timeline-role and .timeline-date
+  // (the org/date shown in the timeline list's upper-right corner) —
+  // stacked under the title here instead, org then date on its own line,
+  // since these cards don't have a separate header row for it.
+  .card-featured-meta {
+    margin-bottom: 6px;
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.5;
+    color: $color-text-accent;
+  }
 
+  // Tags stay pinned to the bottom of the card (aligned across cards of
+  // uneven description length) because .card-featured-see-more (below)
+  // grows to fill the leftover space above them, rather than a
+  // margin-top: auto here.
+  .tag-list {
     span {
       font-size: 12px;
       padding: 2px 8px;

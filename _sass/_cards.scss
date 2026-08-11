@@ -60,9 +60,17 @@
   padding-bottom: $spacer-1;
 
   // 2x2 grid instead of the default 3-per-row — there are exactly 4 of
-  // these teaser cards on the homepage
+  // these teaser cards on the homepage. Flexbox's default stretch only
+  // equalizes height *within* a row, so the "about"/"projects" row and
+  // the "thoughts"/"dance" row could still end up different heights from
+  // each other (e.g. "thoughts"'s longer description wrapping to a
+  // second line) — a shared min-height ties all four together instead of
+  // just each row-mate pair. Scoped to this breakpoint since it's sized
+  // for the 2-line "thoughts" description specifically; below it, cards
+  // stack full-width single-column and don't need it.
   @media (min-width: $breakpoint-lg) {
     width: calc(50% - #{$spacer-2});
+    min-height: 100px;
   }
 
   h3 {
@@ -70,11 +78,38 @@
   }
 }
 
+// Slightly bigger than the default h2 (32px) — used for "Awards &
+// Recognitions" on /about/ and reused as-is for "Featured Projects and
+// Publications" on /experience/ so both read at the same size.
+.awards-heading {
+  font-size: 36px;
+}
+
+// The bio paragraphs at the top of /about/ — smaller than .prose's
+// default $prose-font-size (24px, sized for large intro-style text),
+// matching the body-text size used elsewhere on the site (blog posts,
+// project detail pages). .about-page is set on the wrapping <article> by
+// _layouts/page.html itself (comparing page.permalink), not by any class
+// in about.md's own markdown — so this scopes cleanly to just this page
+// without needing a class on every paragraph, and without touching
+// experience.html, the only other page sharing this same layout.
+// .about-page .prose p (class+class+element) beats plain .prose p
+// (class+element, _components.scss) on specificity — but that same
+// specificity bump also accidentally outranked .prose .award-description
+// (class+class, _cards.scss) for the award descriptions further down
+// this same page, forcing them from their own 14px up to this rule's
+// 17px. Excluding .award-description keeps this scoped to just the bio
+// paragraphs it was meant for.
+.about-page .prose p:not(.award-description) {
+  font-size: 17px;
+}
+
 .award-group {
   margin-bottom: $spacer-3;
 
   h3 {
     margin-top: 0;
+    font-size: 28px;
   }
 }
 
@@ -140,7 +175,7 @@
 
 .award-org {
   font-family: $header-font-family;
-  font-size: 14px;
+  font-size: 15px;
   color: $color-text-accent;
 }
 
@@ -148,7 +183,7 @@
 // has higher specificity (class+element beats a single class) and would
 // otherwise silently win and force this back to $prose-font-size.
 .prose .award-description {
-  font-size: 13px;
+  font-size: 14px;
   color: $color-body-text;
   margin-top: $spacer-1 * 0.5;
 }

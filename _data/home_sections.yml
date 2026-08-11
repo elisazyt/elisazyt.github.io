@@ -1,14 +1,14 @@
 # The teaser cards on the homepage. Add/remove/reorder entries as your
 # site's sections change — no HTML editing needed.
 - title: "about"
-  description: "intro, skills, awards and honors"
+  description: "intro, interests, awards and recognitions"
   url: "/about/"
 - title: "projects"
-  description: "my biggest projects and work experience"
+  description: "research projects, publications, clubs, and work experience"
   url: "/experience/"
 - title: "thoughts"
-  description: "my current thoughts on ai security, research, policy, and related topics"
+  description: "my current thoughts on ai security and related fields, from a technical research and governance perspective"
   url: "/thoughts/"
 - title: "dance"
-  description: "14+ years"
+  description: "records of my 14+ years of dance"
   url: "/dance/"

@@ -6,7 +6,7 @@ order: 2
 ---
 
 <div class="mb-2">
-  <h2 class="mt-0">Featured Projects and Publications</h2>
+  <h2 class="mt-0 awards-heading">Featured Projects and Publications</h2>
   <div class="card-grid mb-4 py-1">
     {% for slug in site.data.featured_projects %}
       {% assign matches = site.projects | where_exp: "item", "item.path contains slug" %}
@@ -14,12 +14,16 @@ order: 2
       {% if item %}
       <a class="card no-underline card-featured" href="{{ item.url | prepend: site.baseurl }}">
         <h3 class="mb-1">{{ item.title }}</h3>
+        <div class="card-featured-meta">
+          {% if item.workplace %}<div>{{ item.workplace }}</div>{% endif %}
+          {% if item.date_range %}<div>{{ item.date_range }}</div>{% endif %}
+        </div>
         <p class="card-description mb-1">{{ item.description }}</p>
         <div class="tag-list">
           {% for tag in item.primary_tags %}<span class="tag-primary">{{ tag }}</span>{% endfor %}
           {% for tag in item.tags %}<span>{{ tag }}</span>{% endfor %}
-          <span class="timeline-see-more">see more &rarr;</span>
         </div>
+        <span class="timeline-see-more card-featured-see-more">click to see more <span class="timeline-see-more-arrow">&rarr;</span></span>
       </a>
       {% endif %}
     {% endfor %}
@@ -46,7 +50,9 @@ order: 2
     {% for job in sorted_experience %}
     <div class="timeline-item" data-category="{{ job.categories | join: ' ' | downcase }}">
       <div class="timeline-marker"></div>
-      {% if job.see_more %}
+      {% if job.external_link %}
+      <a class="timeline-card block no-underline" href="{{ job.external_link }}" target="_blank" rel="noopener noreferrer">
+      {% elsif job.see_more %}
       <a class="timeline-card block no-underline" href="{{ job.url | prepend: site.baseurl }}">
       {% else %}
       <div class="timeline-card">
@@ -67,9 +73,9 @@ order: 2
         <div class="tag-list">
           {% for tag in job.primary_tags %}<span class="tag-primary">{{ tag }}</span>{% endfor %}
           {% for tag in job.tags %}<span>{{ tag }}</span>{% endfor %}
-          {% if job.see_more %}<span class="timeline-see-more">see more &rarr;</span>{% endif %}
+          {% if job.see_more or job.external_link %}<span class="timeline-see-more">click to see more &rarr;</span>{% endif %}
         </div>
-      {% if job.see_more %}
+      {% if job.see_more or job.external_link %}
       </a>
       {% else %}
       </div>

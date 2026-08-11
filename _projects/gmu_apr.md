@@ -5,9 +5,9 @@ title: Multi-agent system for automated program repair
 workplace: George Mason University
 date_range: 12/2023-01/2025, 06/2025-07/2026
 categories: [research]
-description: Designed, implemented, and tested a multi-agent LLM system which automatically patches Java bugs. Agents are provided with various prompts and tools to explore the codebase by parsing the program, performing static analysis, and retrieving relevant context via lexical and semantic search. Agent interactions are implemented using AutoGen. Presented first author poster at 2024 ACM CCS; 2025 Regeneron STS top 40 finalist; 2025 Davidson Fellows Scholarship honorable mention; code available on GitHub.
+description: Designed, implemented, tested, and containerized a multi-agent LLM system that automatically patches Java bugs. Agents are provided with various prompts and tools to explore the codebase via AST parsing, CPG-based static analysis, and lexical and semantic search. Implemented agent interactions and routing, memory management, and message handling using AutoGen. Presented first author poster at 2024 ACM CCS; 2025 Regeneron STS top 40 finalist; 2025 Davidson Fellows Scholarship honorable mention; code available on GitHub.
 primary_tags: [python]
-tags: [LLM agents, autogen, RAG, static analysis, docker]
+tags: [LLM agents, autogen, RAG, static analysis, joern, openai api, docker]
 ---
 
 **PI:** Dr. Kun Sun \
@@ -27,10 +27,15 @@ tags: [LLM agents, autogen, RAG, static analysis, docker]
 
 The following poster, created for Regeneron STS finals week, provides a detailed overview of the project as of March 2025. Since then, the following updates have been made:
 - New context retrieval tools for agents, utilizing static analysis and vector retrieval
-- More advanced multi-agent conversation patterns, agent routing, and message handling
+- More advanced multi-agent conversation patterns, agent routing, memory management, and message handling
 - Fully automated pipeline, including test suite execution and containerized deployment
 
-![Regeneron STS poster: Patching Multi-Location Bugs](/assets/sts_full_poster.jpg)
+<div class="poster-embed-wrapper">
+  <a class="poster-embed-open-link" href="/assets/sts_full_poster.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open poster PDF in new tab">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+  </a>
+  <iframe src="/assets/sts_full_poster.pdf#toolbar=0&navpanes=0" class="poster-embed" title="Regeneron STS poster: Patching Multi-Location Bugs"></iframe>
+</div>
 
 As of July 2026, the most up-to-date multi-agent system consists of the following: 1 admin agent, 4 patching agents, 1 context retrieval agent, 1 summary agent, 1 testing agent, and 1 patch selection agent
 - Admin agent: orchestrates all agents by routing and logging messages from one agent to another

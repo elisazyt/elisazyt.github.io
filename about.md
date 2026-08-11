@@ -5,11 +5,11 @@ permalink: /about/
 order: 1
 ---
 
-<!-- TODO: replace with your real bio -->
+placeholder
 
-Placeholder bio — a couple of paragraphs about your background, what you work on, and what you care about.
 
-## Awards & Honors
+## Awards & Recognitions
+{: .awards-heading}
 
 <!-- Add/remove entries by adding a file to _awards/ — see existing ones for
      the front matter fields. Category order and per-category award order

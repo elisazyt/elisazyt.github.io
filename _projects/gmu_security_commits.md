@@ -6,7 +6,7 @@ workplace: George Mason University
 date_range: 06/2022-09/2022, 09/2023-10/2023
 categories: [research]
 description: |
-    Constructed a dataset of ~1.2K security commits and ~2.8K non-security commits in Python. Dataset consists of indexed CVE records from MITRE, as well as GitHub commits with no associated CVE ID detected via keyword filtering and a graph-based method. The latter utilizes a new graph representation of code changes, which is embedded and fed into a GCN with multi-head attention. Co-authored and presented research paper at the 2023 IEEE ICSME; dataset is available on Hugging Face.
+    Constructed a dataset of ~1.2K security commits and ~2.8K non-security commits in Python, consisting of CVE records from MITRE and GitHub commits without a CVE ID. The latter is detected via keyword filtering and a graph-based method which utilizes a compact graph representation capturing the syntax and semantics of code changes. This graph is embedded and fed into a GCN with multi-head attention. Analyzed dataset and summarized common patch patterns. Co-authored and presented research paper at 2023 IEEE ICSME; dataset available on Hugging Face.
 primary_tags: [python]
 tags: [graph learning, topic modeling, program analysis, security patch]
 ---
