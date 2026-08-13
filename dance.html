@@ -8,6 +8,12 @@ order: 5
 
   {% include page_heading.html %}
 
+  <p class="section-subtext dance-intro">
+    I fell in love with dance at the age of 4 and haven't stopped dancing since then! Shoutout to Tri Valley Dance
+    Academy for over 12 years of rigorous training, support, and all the fun memories :) You can now find me on MIT's
+    traditional Chinese dance team, MIT Flow.
+  </p>
+
   <div class="carousel">
     <button class="carousel-arrow carousel-arrow-left" aria-label="Previous photo">&#8249;</button>
     <div class="carousel-track-wrap">
@@ -22,15 +28,42 @@ order: 5
     <button class="carousel-arrow carousel-arrow-right" aria-label="Next photo">&#8250;</button>
   </div>
 
-  <!-- TODO: replace these placeholder swatches with real images, e.g. <img src="..."> -->
+  <h2 class="mt-0 awards-heading">Favorites</h2>
+  <p class="section-subtext">
+    Below are some of my favorite and highest-scoring solos and group dances over the years. </p>
+
+  {% for row in site.data.dance_videos %}
   <div class="card-grid mb-4 py-2">
-    {% for piece in site.data.art %}
-    <div class="card">
+    {% for piece in row %}
+    <div class="card art-card">
+      {% if piece.media %}
+        {% assign ext = piece.media | split: '.' | last | downcase %}
+        {% if ext == 'mp4' or ext == 'mov' or ext == 'webm' %}
+        {% assign media_base = piece.media | split: '.' | first %}
+        {% assign poster_file = nil %}
+        {% for f in site.static_files %}
+          {% if f.path contains '/assets/pics_vids/dance/thumbnails/' %}
+            {% assign f_base = f.name | split: '.' | first %}
+            {% if f_base == media_base %}
+              {% assign poster_file = f.path %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        <video class="art-media" src="{{ '/assets/pics_vids/dance/videos/' | append: piece.media | relative_url }}"{% if poster_file %} poster="{{ poster_file | relative_url }}"{% endif %} controls playsinline></video>
+        {% else %}
+        <img class="art-media" src="{{ '/assets/pics_vids/dance/videos/' | append: piece.media | relative_url }}" alt="">
+        {% endif %}
+      {% else %}
       <div class="art-placeholder"></div>
-      <h3 class="mb-1 mt-2">{{ piece.title }}</h3>
-      {{ piece.caption | markdownify }}
+      {% endif %}
+      <h3>{{ piece.title }}</h3>
+      <p class="art-event">{{ piece.event }}</p>
+      {% if piece.description %}
+      <p class="art-description">{{ piece.description | markdownify }}</p>
+      {% endif %}
     </div>
     {% endfor %}
   </div>
+  {% endfor %}
 
 </div>

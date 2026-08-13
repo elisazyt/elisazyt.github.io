@@ -262,6 +262,24 @@
         });
       });
 
+      // Arriving with a URL hash pointing at a heading inside this post
+      // (e.g. a link from another page, like /about/'s "#my-research-
+      // interests") — the heading itself is always visible even when its
+      // section is collapsed, so the browser's own native hash-scroll
+      // already lands there, but the content below it stays hidden.
+      // Expand that section too, so the link actually lands on visible
+      // content rather than just a collapsed heading with nothing to see.
+      if (window.location.hash) {
+        var hashTarget = document.getElementById(window.location.hash.slice(1));
+        if (hashTarget && postBody.contains(hashTarget)) {
+          var hashWrapper = hashTarget.closest('.section-wrapper');
+          if (hashWrapper && hashWrapper.classList.contains('collapsed')) {
+            var hashToggle = hashWrapper.querySelector('.section-toggle');
+            if (hashToggle) hashToggle.click();
+          }
+        }
+      }
+
       updateFootnotesVisibility();
 
       var expandAllLabel = expandAllBtn && expandAllBtn.querySelector('.expand-all-label');

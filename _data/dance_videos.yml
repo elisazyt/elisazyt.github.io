@@ -1,0 +1,43 @@
+# Cards for the Dance page's gallery grid, below the photo carousel.
+# Grouped into explicit rows (a list of rows, each a list of pieces) so
+# each row can hold a different number of cards — e.g. 2 in the first
+# row, 3 in the second — rather than auto-wrapping every 3 like a plain
+# flex grid would. `media` is a filename in
+# assets/pics_vids/dance/videos/ — an image (jpg/png/etc.) or a video
+# (mp4/mov/webm), detected automatically by extension. Leave `media` off
+# (or the whole field out) to fall back to the plain placeholder swatch.
+#
+# Video thumbnails are automatic — no field needed here. Drop an image
+# into assets/pics_vids/dance/thumbnails/ with the same base filename as
+# the video (e.g. because_of_you.png for because_of_you.mp4, any
+# extension) and dance.html picks it up on the next build. No matching
+# file just falls back to the browser's own default (usually a black
+# frame) until one's added.
+#
+# Two-line caption: `event` (competition name, year) on its own line,
+# `description` (freeform notes) on the line below. Leave `description`
+# off (or blank) for a single-line caption.
+- - title: "Because of You"
+    event: "Energy National Dance Competition, 2020"
+    description: "Lyrical solo"
+    media: because_of_you.mp4
+  - title: "The War: My Homeland"
+    event: "Starbound National Talent Competition, 2018"
+    description: "Open solo"
+    media: war_homeland.MP4
+  - title: "I Have a Dream"
+    event: "Rainbow Dance Competition, 2019"
+    description: "Lyrical small group"
+    media: dream.mp4
+- - title: "Mongolian River"
+    event: "Showstopper Dance Competition, 2024"
+    description: "Folkloric large group"
+    media: mongolian_river.mp4
+  - title: "You Say"
+    event: "Energy National Dance Competition, 2020"
+    description: "Lyrical small group"
+    media: you_say.mp4
+  - title: "In the Opera"
+    event: "America Loves to Dance Awards, 2022"
+    description: "Folkloric large group"
+    media: in_the_opera.mp4

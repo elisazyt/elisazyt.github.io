@@ -682,6 +682,14 @@ header ul li a:hover {
   color: $color-text-accent;
 }
 
+// The intro paragraph at the top of /dance/, above the photo carousel —
+// slightly bigger than .section-subtext's own 16px, with a bit of extra
+// room below it before the carousel starts.
+.dance-intro {
+  font-size: 18px;
+  margin-bottom: $spacer-2;
+}
+
 .section-subtext p {
   margin-bottom: 0.6em;
 

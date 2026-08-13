@@ -1,7 +1,7 @@
 # The teaser cards on the homepage. Add/remove/reorder entries as your
 # site's sections change — no HTML editing needed.
 - title: "about"
-  description: "intro, interests, awards and recognitions"
+  description: "bio, awards and recognitions"
   url: "/about/"
 - title: "projects"
   description: "research projects, publications, clubs, and work experience"
