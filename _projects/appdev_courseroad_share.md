@@ -8,8 +8,3 @@ description: Co-led team to build an MIT course planning tool, combining the fun
 primary_tags: [python]
 tags: [mongodb, fastapi, vector search, object-oriented programming]
 ---
-
-<!-- TODO: replace with your real experience -->
-
-- Placeholder bullet describing a key responsibility or achievement.
-- Placeholder bullet describing a project you led or shipped.

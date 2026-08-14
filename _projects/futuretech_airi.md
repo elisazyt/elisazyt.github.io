@@ -1,6 +1,6 @@
 ---
 layout: project-detail
-title: AI Risk Initiative
+title: MIT AI Risk Initiative
 workplace: MIT FutureTech
 date_range: 09/2025-05/2026
 categories: [research, governance]

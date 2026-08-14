@@ -732,13 +732,13 @@ header ul li a:hover {
   transform: translate(-50%, -50%);
 }
 
-// thoughts.html: the embedded posts' own titles carry an extra $spacer-2
-// (.post-header, below) that neither the page's own "thoughts" title nor
-// the intro block have, so without this they'd sit 16px left of "Open
-// problems...". Match it on both so everything — page title, intro text,
-// and post titles — lines up on one left edge. The bullet dot's negative
-// offset (above) still has room to sit inside this gutter instead of
-// overflowing the page edge.
+// thoughts.html: the embedded posts' own titles carry an extra
+// $spacer-2 (.post-header, below) that neither the page's own
+// "thoughts" title nor the intro block have, so without this they'd
+// sit 16px left of "Open problems...". Match it on both so everything —
+// page title, intro text, and post titles — lines up on one left edge.
+// The bullet dot's negative offset (above) still has room to sit inside
+// this gutter instead of overflowing the page edge.
 .thoughts-page .section-subtext,
 .thoughts-page .thoughts-title {
   padding-left: $spacer-2;
@@ -800,6 +800,14 @@ header ul li a:hover {
   flex-direction: column;
   align-items: flex-end;
   text-align: right;
+  // .timeline-header's justify-content: space-between only right-aligns
+  // this against the title when they share a row. On narrow (mobile)
+  // widths, a long title wraps onto its own line and pushes this to a
+  // second row by itself — space-between has nothing to space a lone
+  // item against there, so it silently falls back to the left edge.
+  // margin-left: auto pins it to the right regardless of which row it
+  // ends up sharing (or not) with the title.
+  margin-left: auto;
 }
 
 .timeline-role,

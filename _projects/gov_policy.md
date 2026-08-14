@@ -9,8 +9,3 @@ description: Led an intern team to research AI transparency and disclosure acros
 primary_tags:
 tags: [public policy, generative AI safety, data transparency, AI disclosure]
 ---
-
-<!-- TODO: replace with your real experience -->
-
-- Placeholder bullet describing a key responsibility or achievement.
-- Placeholder bullet describing a project you led or shipped.

@@ -304,6 +304,13 @@
       // section first so the jump actually lands somewhere visible.
       if (footnotesEl) {
         footnotesEl.querySelectorAll('a.reversefootnote, a.footnote-backref').forEach(function (backlink) {
+          // kramdown always renders this backlink as a bare ↩ (U+21A9) with
+          // no variation selector — most platforms show that as plain text,
+          // but iOS defaults arrow-like characters like this to full-color
+          // emoji presentation unless told otherwise. Appending U+FE0E (the
+          // "text presentation selector") forces the plain glyph everywhere.
+          backlink.textContent = backlink.textContent + '︎';
+
           backlink.addEventListener('click', function (e) {
             var href = backlink.getAttribute('href') || '';
             if (href.charAt(0) !== '#') return;

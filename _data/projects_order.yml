@@ -4,11 +4,11 @@
 # in the timeline.
 - sandia_ml_trust
 - sandia_obfuscation
-- appdev_courseroad_share
-- csail_synthetic_malware
 - futuretech_airi
-- appdev_typynb
+- csail_synthetic_malware
+- appdev_courseroad_share
 - aim_labs
+- appdev_typynb
 - gmu_apr
 - gov_policy
 # gmu_multi_language
