@@ -1,5 +1,6 @@
 ---
 layout: project-detail
+permalink: /experience/aim-labs/
 title: Sign language translation
 workplace: AI@MIT Labs
 date_range: 10/2025-12/2025

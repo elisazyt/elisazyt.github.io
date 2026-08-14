@@ -1,5 +1,6 @@
 ---
 layout: project-detail
+permalink: /experience/ai-policy/
 title: AI policy research and proposal
 workplace: State Assembly
 date_range: 01/2024-08/2024

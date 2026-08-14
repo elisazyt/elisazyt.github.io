@@ -1,5 +1,6 @@
 ---
 layout: project-detail
+permalink: /experience/course-planner/
 title: MIT course planning tool
 workplace: AppDev@MIT
 date_range: 02/2026-05/2026

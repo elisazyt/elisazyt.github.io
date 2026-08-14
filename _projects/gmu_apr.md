@@ -1,5 +1,6 @@
 ---
 layout: project-detail
+permalink: /experience/program-repair/
 see_more: true
 title: Multi-agent system for automated program repair
 workplace: George Mason University

@@ -1,5 +1,6 @@
 ---
 layout: project-detail
+permalink: /experience/jupyter-transpiler/
 title: Jupyter notebook transpiler
 workplace: AppDev@MIT
 date_range: 09/2025-12/2025

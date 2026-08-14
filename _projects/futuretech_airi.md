@@ -1,5 +1,6 @@
 ---
 layout: project-detail
+permalink: /experience/airi/
 title: MIT AI Risk Initiative
 workplace: MIT FutureTech
 date_range: 09/2025-05/2026
