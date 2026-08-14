@@ -14,4 +14,31 @@
 
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}">
+
+  <!-- Umami analytics — dashboard at https://cloud.umami.is
+       Umami Cloud has no server-side IP-exclusion option available to us
+       (that's an env var set at deploy time, which only self-hosted
+       instances can configure), so self-exclusion happens client-side
+       instead: visiting with ?analytics=off sets a localStorage flag that
+       skips loading the tracking script on every future visit from this
+       browser. ?analytics=on clears it again. Per-browser/device (visit
+       once per browser you use), and doesn't persist in incognito/private
+       mode or if browser data gets cleared. -->
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('analytics') === 'off') {
+        localStorage.setItem('disable-analytics', '1');
+      } else if (params.get('analytics') === 'on') {
+        localStorage.removeItem('disable-analytics');
+      }
+      if (localStorage.getItem('disable-analytics') === '1') return;
+
+      var script = document.createElement('script');
+      script.defer = true;
+      script.src = 'https://cloud.umami.is/script.js';
+      script.setAttribute('data-website-id', '39b9bab8-a9b7-4ef0-abc6-cc7865c25ced');
+      document.head.appendChild(script);
+    })();
+  </script>
 </head>
