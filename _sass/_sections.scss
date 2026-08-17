@@ -665,6 +665,7 @@ header ul li a:hover {
   .card-featured-meta {
     margin-bottom: 6px;
     font-style: italic;
+    font-weight: bold;
     font-size: 13px;
     line-height: 1.5;
     color: $color-text-accent;
@@ -824,6 +825,7 @@ header ul li a:hover {
 .timeline-role,
 .timeline-date {
   font-style: italic;
+  font-weight: bold;
   font-size: 13px;
   line-height: 1.5;
   color: $color-text-accent;
