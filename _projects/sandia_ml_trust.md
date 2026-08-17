@@ -1,6 +1,6 @@
 ---
 layout: project-detail
-permalink: /experience/trustworthy-ml/
+permalink: /projects/trustworthy-ml/
 title: Evaluating ML trustworthiness and explainability
 workplace: Sandia National Laboratories
 date_range: 06/2026-present

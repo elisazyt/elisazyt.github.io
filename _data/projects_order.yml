@@ -1,5 +1,5 @@
 # Manually defines the display order of _projects entries on the timeline
-# at /experience/ — top to bottom, most recent first. List each entry by
+# at /projects/ — top to bottom, most recent first. List each entry by
 # its filename (no extension). Anything left off this list won't show up
 # in the timeline.
 - sandia_ml_trust

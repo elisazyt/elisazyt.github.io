@@ -37,6 +37,6 @@ markdown: kramdown
 collections:
   projects:
     output: true
-    permalink: /experience/:path/
+    permalink: /projects/:path/
   awards:
     output: false

@@ -1,6 +1,6 @@
 ---
 layout: project-detail
-permalink: /experience/re-obfuscation/
+permalink: /projects/re-obfuscation/
 title: Code obfuscation for LLM benchmarking
 workplace: Sandia National Laboratories
 date_range: 06/2026-present

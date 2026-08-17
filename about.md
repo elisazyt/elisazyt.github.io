@@ -8,7 +8,7 @@ order: 1
 ## Bio
 {: .awards-heading}
 
-I'm an incoming sophomore at MIT majoring in Course 6-4 (AI & Decision Making) with a minor in Course 18 (Mathematics). Much of my experience centers around ML and agentic AI for software security and trustworthiness: this includes automated patch detection and generation, generating synthetic data to train malware classifiers, explainability for blackbox and glassbox models, and more. Detailed information about my previous work and publications can be found [here](/experience/).
+I'm an incoming sophomore at MIT majoring in Course 6-4 (AI & Decision Making) with a minor in Course 18 (Mathematics). Much of my experience centers around ML and agentic AI for software security and trustworthiness: this includes automated patch detection and generation, generating synthetic data to train malware classifiers, explainability for blackbox and glassbox models, and more. Detailed information about my previous work and publications can be found [here](/projects/).
 
 My technical interests currently span AI security and related topics such as monitoring, controllability, and safety. Some of my specific research interests are outlined [here](/thoughts/#my-research-interests), though I am very open to exploring other directions as well. I'm also quite interested in how (technical) AI governance affects the large-scale adoption of such principles and practices in critical real-world contexts.
 

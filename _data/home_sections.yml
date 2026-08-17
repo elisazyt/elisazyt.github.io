@@ -5,7 +5,7 @@
   url: "/about/"
 - title: "projects"
   description: "research projects, publications, clubs, and work experience"
-  url: "/experience/"
+  url: "/projects/"
 - title: "thoughts"
   description: "my current perspective on ai security, research, governance, etc"
   url: "/thoughts/"

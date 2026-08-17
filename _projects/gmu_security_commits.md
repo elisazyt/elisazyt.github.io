@@ -1,6 +1,6 @@
 ---
 layout: project-detail
-permalink: /experience/security-commits/
+permalink: /projects/security-commits/
 see_more: true
 title: Python security commit dataset
 workplace: George Mason University

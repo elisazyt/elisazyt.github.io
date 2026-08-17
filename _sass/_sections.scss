@@ -11,6 +11,17 @@
   font-size: 60px;
 }
 
+// Org line under the title on a project's own detail page — same
+// italic/muted treatment as .timeline-role (the timeline list's corner
+// meta) and .card-featured-meta (the featured cards), so it reads
+// consistently with those.
+.project-detail-meta {
+  margin-bottom: $spacer-1;
+  font-style: italic;
+  font-size: 18px;
+  color: $color-text-accent;
+}
+
 // The extended-description body text on a project's detail page was
 // using .prose's default $prose-font-size (24px) — sized for large
 // intro-style prose, too big for a page that's mostly reading. Matches
@@ -673,7 +684,7 @@ header ul li a:hover {
 
 // The "Below is a comprehensive list..." caption under a section heading —
 // used both as a single element with the class directly on a <p>
-// (/experience/) and as a wrapper div around markdownify'd, possibly
+// (/projects/) and as a wrapper div around markdownify'd, possibly
 // multi-paragraph content (/thoughts/'s intro), hence styling both the
 // element itself and any <p> children.
 .section-subtext,

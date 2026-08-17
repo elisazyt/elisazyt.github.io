@@ -5,6 +5,12 @@ layout: default
 
   {% include page_heading.html %}
 
+  {% if page.workplace %}
+  <div class="project-detail-meta">
+    <span>{{ page.workplace }}</span>
+  </div>
+  {% endif %}
+
   {% if page.primary_tags or page.tags %}
   <div class="tag-list mb-1">
     {% for tag in page.primary_tags %}<span class="tag-primary">{{ tag }}</span>{% endfor %}
@@ -20,6 +26,6 @@ layout: default
   <p><a class="link-primary" href="{{ page.link }}" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a></p>
   {% endif %}
 
-  <p><a class="link-primary" href="{{ '/experience/' | prepend: site.baseurl }}">&larr; Back to all projects</a></p>
+  <p><a class="link-primary" href="{{ '/projects/' | prepend: site.baseurl }}">&larr; Back to all projects</a></p>
 
 </article>
