@@ -35,7 +35,7 @@ The following poster, created for Regeneron STS finals week, provides a detailed
   <a class="poster-embed-open-link" href="/assets/sts_full_poster.pdf" target="_blank" rel="noopener noreferrer" aria-label="Open poster PDF in new tab">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
   </a>
-  <iframe src="/assets/sts_full_poster.pdf#toolbar=0&navpanes=0" class="poster-embed" title="Regeneron STS poster: Patching Multi-Location Bugs"></iframe>
+  <iframe src="/assets/sts_full_poster.pdf#toolbar=0&navpanes=0&zoom=page-width" class="poster-embed" title="Regeneron STS poster: Patching Multi-Location Bugs"></iframe>
 </div>
 
 As of July 2026, the most up-to-date multi-agent system consists of the following: 1 admin agent, 4 patching agents, 1 context retrieval agent, 1 summary agent, 1 testing agent, and 1 patch selection agent

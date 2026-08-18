@@ -51,7 +51,10 @@
 // panels (cards, code blocks) rather than a bare unstyled rectangle.
 // The #toolbar=0&navpanes=0 URL fragment (on the <iframe> src itself,
 // not here) hides the browser PDF viewer's download button and the
-// page-thumbnail sidebar.
+// page-thumbnail sidebar; &zoom=page-width overrides the viewer's
+// default "fit whole page" zoom (which shrinks to whichever of
+// width/height is more constraining, often leaving the poster narrower
+// than this box's own full width) so the poster fills the width here.
 .poster-embed-wrapper {
   position: relative; // anchors .poster-embed-open-link against this
 }
@@ -379,14 +382,32 @@ header {
   border-radius: 8px;
 }
 
+// width-driven by default (aspect-ratio derives the height unambiguously
+// from that) rather than height:100%, which on mobile — where .hero-grid
+// has wrapped and .hero-image sits on its own line with no explicit
+// height — is a percentage against an indefinite parent height. Spec
+// says that should just fall back to auto, but WebKit has been
+// inconsistent about it across iOS versions for exactly this flex-item
+// case, which is why the same photo could render blown-up-huge on one
+// iPhone's Safari and normal-sized on another's. Switched back to the
+// original height:100% stretch-to-match-hero-text behavior only once
+// .hero-grid is actually side-by-side (matches the site's usual 52em
+// breakpoint), where the parent's height is genuinely definite again.
 .hero-image-photo {
   display: block;
-  width: auto;
-  height: 100%;
+  width: 100%;
+  height: auto;
   max-width: 100%;
   aspect-ratio: 6 / 7; // closer to square than before, just a touch portrait
   object-fit: cover;
   border-radius: 8px;
+}
+
+@media (min-width: 52em) {
+  .hero-image-photo {
+    width: auto;
+    height: 100%;
+  }
 }
 
 .hero-socials {
