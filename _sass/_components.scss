@@ -538,6 +538,29 @@ code {
   display: flex;
 }
 
+// Hovering a section's own h2 (or any of its subitems) reveals just that
+// section's subsections, independent of which one is currently
+// scroll-active — a quick way to peek at a section's outline without
+// scrolling to it. Scoped to .section-rail-group (not the whole rail),
+// so hovering one section doesn't also expand every other section's.
+// Pure CSS on top of the .active rules above — no JS change needed, and
+// .active still governs which items render bold/highlighted.
+//
+// :not(:empty) on the h4 container matters: footer.html builds one
+// h4-container per h3 unconditionally, even for h3s with no h4 children
+// underneath — the JS .active logic only ever flags non-empty ones (see
+// h4Headings.length > 0 there), but a bare selector here would flip
+// every h3's container to display: flex regardless, and an empty flex
+// container still claims its margin-top, showing up as unwanted extra
+// gap between h3 bullets that have no subsections of their own.
+.section-rail-group:hover .section-rail-subitems:not(:empty) {
+  display: flex;
+}
+
+.section-rail-group:hover .section-rail-subitems-h4:not(:empty) {
+  display: flex;
+}
+
 .section-rail-item-h3 .section-rail-dot {
   width: 5px;
   height: 5px;
