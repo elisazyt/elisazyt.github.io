@@ -19,12 +19,26 @@ $pink-bright: #E68CC6; // pop highlight
 $star-gold: #E3B23C;   // starred-award star
 
 // Flat page background (no blur) — warm off-white/cream-gray rather than
-// a flat technical gray
-$bg-flat: #F0EBE6;
+// a flat technical gray. Original was #F0EBE6; pinked to #F2E6E8; dialed
+// back partway toward the original here for "a tiny bit less pink."
+$bg-flat: #F1E8E7;
 
-// Card / box background — lightened and slightly less saturated for a
-// crisper, cleaner cream instead of a dingy/aged one
-$card-bg: #EEE9E1;
+// Card / box background — production's actual old look (measured
+// directly off the live site rather than guessed at) was a translucent
+// rgba(#EEE9E1, 0.65) + backdrop-filter blur(6px) sitting on the
+// original #F0EBE6 page background, which blends out to an effective
+// solid ~#EFEAE3 — notably NOT pink on its own, since production's page
+// background never was; the pink cast remembered here was almost
+// certainly picked up from this session's pink $bg-flat experiments
+// blending through the old translucent cards on the local dev server.
+// #F1E5E5 (green == blue, no warm component left at all) overcorrected
+// too far toward pink and away from cream — pulled back here so green
+// stays clearly above blue (cream's warmth) with only a light pink lean
+// (red only a touch above green), rather than the two competing evenly.
+// Nudged a small step further toward $bg-flat (#F1E8E7) here so the card
+// blends a little more with the page instead of standing apart from it
+// — still clearly its own lighter/creamier tone, just less so.
+$card-bg: #F2EBE5;
 
 // Atmosphere blob colors — pink pushed more saturated/rosy so it reads
 // distinctly from lavender/periwinkle instead of blending together; peach

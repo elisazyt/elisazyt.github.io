@@ -613,8 +613,13 @@ code {
   font-size: 12px;
   line-height: 1.35;
   color: $color-text-accent;
+  // white-space: normal (not nowrap) lets a multi-word title wrap onto a
+  // second line — but no word-break: break-word, so an individual word
+  // like "Preface" always stays whole rather than splitting mid-letter
+  // when the rail is narrower than that word (see footer.html's
+  // updateVisibility(), which now sizes the rail to fit instead of
+  // shrinking it as a ratio of the screen margin).
   white-space: normal;
-  word-break: break-word;
   transition: color 0.2s ease;
 }
 

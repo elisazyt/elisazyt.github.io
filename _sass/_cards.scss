@@ -9,9 +9,7 @@
   width: 100%;
   padding: $spacer-2;
   margin: $spacer-1;
-  background: rgba($color-card-background, 0.65);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: $color-card-background; // solid — was a translucent rgba()+backdrop-filter blur, dropped for both a cleaner flat look and to cut the compositing cost of blurring behind every card
   border: 1px solid $color-border;
   border-radius: 4px;
   transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -126,9 +124,7 @@
 
 .award-item {
   display: block;
-  background: rgba($color-card-background, 0.65);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: $color-card-background; // solid — was a translucent rgba()+backdrop-filter blur, dropped for both a cleaner flat look and to cut the compositing cost of blurring behind every card
   border-left: 3px solid $color-accent;
   padding: $spacer-1 $spacer-2;
   margin-bottom: $spacer-1;

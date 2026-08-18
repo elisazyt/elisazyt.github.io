@@ -530,19 +530,149 @@
         nav.style.top = top + 'px';
       }
 
-      // Sized as a ratio of the actual margin beside the centered page
-      // container, not hardcoded pixel lengths — so it always fits and
-      // stays visible on any screen, just scaling with however much room
-      // there happens to be. Of that margin: leftRatio is the gap kept
-      // from the screen edge, widthRatio is how much the rail itself
-      // takes up, and the rest (1 - leftRatio - widthRatio) is the gap
-      // kept before the post content starts.
-      var containerEl = firstPostBody.closest('.container') || document.querySelector('.container');
-      var leftRatio = 0.18;
-      var widthRatio = 0.72;
+      // thoughts.html doesn't wrap its posts in one shared container —
+      // each post gets its own <article class="container">, and the page
+      // intro text and the <hr class="thoughts-post-divider"> between
+      // posts each sit in their own separate .container too. All of
+      // those need to condense in step with the post bodies, so rather
+      // than only grabbing each post-body's own container, walk up to
+      // the nearest ancestor common to the first and last post-body, then
+      // collect every .container inside it — on thoughts.html that's
+      // .thoughts-page, picking up the intro/dividers/articles alike; on
+      // a single-post page it's just that one post's own container.
+      function closestCommonAncestor(a, b) {
+        var el = a;
+        while (el && !el.contains(b)) el = el.parentElement;
+        return el || document.body;
+      }
+      var firstContainer = firstPostBody.closest('.container') || document.body;
+      var commonAncestor = closestCommonAncestor(firstContainer, lastPostBodyEl);
+      var contentContainers = Array.prototype.slice.call(commonAncestor.querySelectorAll('.container'));
+      if (commonAncestor.classList && commonAncestor.classList.contains('container') && contentContainers.indexOf(commonAncestor) === -1) {
+        contentContainers.push(commonAncestor);
+      }
+      if (!contentContainers.length) {
+        var fallbackContainer = document.querySelector('.container');
+        if (fallbackContainer) contentContainers.push(fallbackContainer);
+      }
+
+      // One-time measurement of the widest single WORD across every
+      // heading (not the widest full heading phrase) — a multi-word
+      // title is fine wrapping across two or three lines, so the rail
+      // only ever needs to be as wide as its single longest word, plus
+      // room for that item's dot marker and however deep it's nested
+      // (h3/h4 subitems sit under extra padding-left). Measured at bold
+      // weight regardless of each item's resting weight, since an item
+      // renders bold once scrolled/hovered active (see .active rules
+      // below) and must not wrap mid-word only once that happens.
+      var wordProbe = document.createElement('span');
+      wordProbe.style.position = 'fixed';
+      wordProbe.style.visibility = 'hidden';
+      wordProbe.style.whiteSpace = 'nowrap';
+      wordProbe.style.fontWeight = 'bold';
+      document.body.appendChild(wordProbe);
+
+      var dotAllowance = 17; // matches .section-rail-item's own dot width (7px) + gap (10px)
+      var railWidth = 0;
+      flatEntries.forEach(function (entry) {
+        var labelEl = entry.item.querySelector('.section-rail-label');
+        if (!labelEl) return;
+
+        var indent = 0;
+        if (entry.item.classList.contains('section-rail-item-h3')) indent = 17;
+        else if (entry.item.classList.contains('section-rail-item-h4')) indent = 34;
+
+        var computed = getComputedStyle(labelEl);
+        wordProbe.style.fontSize = computed.fontSize;
+        wordProbe.style.fontFamily = computed.fontFamily;
+        wordProbe.style.letterSpacing = computed.letterSpacing;
+
+        labelEl.textContent.split(/\s+/).forEach(function (word) {
+          if (!word) return;
+          wordProbe.textContent = word;
+          railWidth = Math.max(railWidth, indent + dotAllowance + wordProbe.getBoundingClientRect().width);
+        });
+      });
+      document.body.removeChild(wordProbe);
+      railWidth = Math.ceil(railWidth) + 2; // small rounding buffer
+
+      var edgeGap = 24; // one shared gap value used everywhere — screen edge to rail, rail to post content, and post content to the opposite screen edge all match
+      var leftGap = edgeGap;
+      var contentGap = edgeGap;
+      var reservedLeft = leftGap + railWidth + contentGap;
+      var minBodyWidth = 360; // below this there's no longer room for a readable content column alongside a full-width rail — give up on reserving space and fall back to normal full-width mobile layout (rail hides itself; see updateVisibility)
+      var railHasRoom = false; // set by updateContainerWidth() below, and read by updateVisibility() — the single source of truth for whether the rail is currently showable, so the two never disagree
+
+      // Reserves exactly `reservedLeft` px on the left for the rail by
+      // narrowing the post content's own container and pushing it right
+      // — always, not just once the screen gets narrow. The rail itself
+      // sits at a constant `leftGap` from the screen edge regardless of
+      // window width, so the container must be positioned relative to
+      // that same fixed point every time too, or the gap between them
+      // ends up arbitrary (this was the actual bug: on a wide screen the
+      // container was left at its own naturally-centered position, which
+      // has nothing to do with where the rail's fixed-position right
+      // edge actually falls).
+      //
+      // The container's RIGHT edge is normally left untouched at its own
+      // natural position (70em reading-width cap, normally centered) —
+      // only the left edge moves in to make room for the rail. But
+      // .container has no built-in awareness of the header's own
+      // floating top-right corner nav (header.html's <div
+      // class="...absolute-lg..."> — position:absolute, only once the
+      // viewport is wide enough for that "-lg" breakpoint to kick in; at
+      // narrower widths it's in normal in-flow layout instead and this
+      // doesn't apply): at in-between widths, .container's natural right
+      // edge already reaches past where that corner nav sits, which
+      // doesn't collide at the very top of the page but does scroll text
+      // underneath the nav once you scroll down, since the header stays
+      // pinned there via position:sticky. Clamped below so the body's
+      // right edge is a hard boundary at the nav's own left edge (minus
+      // the same edgeGap used everywhere else), whenever that nav is
+      // actually in its floating corner mode.
+      var headerNavWrapper = document.querySelector('header > div');
+
+      function updateContainerWidth() {
+        contentContainers.forEach(function (c) {
+          c.style.marginLeft = '';
+          c.style.marginRight = '';
+          c.style.width = '';
+          c.style.maxWidth = '';
+        });
+        var sample = contentContainers[0];
+        if (!sample) {
+          railHasRoom = false;
+          return;
+        }
+
+        var naturalRight = sample.getBoundingClientRect().right;
+
+        if (headerNavWrapper && getComputedStyle(headerNavWrapper).position === 'absolute') {
+          var headerLeft = headerNavWrapper.getBoundingClientRect().left;
+          naturalRight = Math.min(naturalRight, headerLeft - edgeGap);
+        }
+
+        var bodyWidth = naturalRight - reservedLeft;
+
+        if (bodyWidth < minBodyWidth) {
+          railHasRoom = false;
+          return;
+        }
+
+        railHasRoom = true;
+        contentContainers.forEach(function (c) {
+          c.style.marginLeft = reservedLeft + 'px';
+          c.style.marginRight = '0';
+          c.style.width = bodyWidth + 'px';
+          c.style.maxWidth = bodyWidth + 'px';
+        });
+      }
 
       function updateVisibility() {
-        if (!containerEl) return;
+        if (!railHasRoom) {
+          nav.style.display = 'none';
+          return;
+        }
 
         // Visible from the very top of the page onward (even before
         // scrolling down into the first post — see updateActive() below,
@@ -561,13 +691,8 @@
           return;
         }
 
-        var margin = (window.innerWidth - containerEl.getBoundingClientRect().width) / 2;
-        if (margin <= 0) {
-          nav.style.display = 'none';
-          return;
-        }
-        nav.style.left = (margin * leftRatio) + 'px';
-        nav.style.maxWidth = (margin * widthRatio) + 'px';
+        nav.style.left = leftGap + 'px';
+        nav.style.maxWidth = railWidth + 'px';
         nav.style.display = 'flex';
       }
 
@@ -635,11 +760,18 @@
         updateVisibility();
       }, { passive: true });
       window.addEventListener('resize', function () {
+        // Only resize (not scroll) can change window.innerWidth, so
+        // updateContainerWidth() — which decides how much the post body
+        // needs to condense to keep the rail at its full fixed width —
+        // only needs to run here and on initial load, not on every
+        // scroll tick.
+        updateContainerWidth();
         updatePosition();
         updateActive();
         updateVisibility();
       });
 
+      updateContainerWidth();
       updatePosition();
       updateActive();
       updateVisibility();

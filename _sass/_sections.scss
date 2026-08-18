@@ -173,9 +173,7 @@
 .post-preview {
   position: relative; // anchors &-title-link's stretched-link overlay below
   display: block;
-  background: rgba($color-card-background, 0.65);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: $color-card-background; // solid — was a translucent rgba()+backdrop-filter blur, dropped for both a cleaner flat look and to cut the compositing cost of blurring behind every card
   border: 1px solid $color-border;
   border-radius: 6px;
   padding: $spacer-1 $spacer-3;
@@ -332,9 +330,7 @@ header {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba($color-background, 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: $color-background; // solid — was a translucent rgba()+backdrop-filter blur; sticky, so this ran continuously on every scroll frame
 }
 
 // Home hero: text side-by-side with an image
@@ -504,9 +500,7 @@ header ul li a:hover {
 // Everything in the timeline is scaled to ~80% of normal size
 .timeline-card {
   position: relative; // so .timeline-category can be positioned against this card specifically
-  background: rgba($color-card-background, 0.65);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: $color-card-background; // solid — was a translucent rgba()+backdrop-filter blur, dropped for both a cleaner flat look and to cut the compositing cost of blurring behind every card
   border: 1px solid $color-border;
   border-radius: 4px;
   padding: $spacer-2 * 0.8;
