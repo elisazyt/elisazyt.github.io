@@ -33,7 +33,7 @@ body {
     font-size: $body-font-size;
     line-height: 1.5;
     color: $color-body-text;
-    background-color: transparent; // was $color-background — changed so the fixed .atmosphere layer (behind body, z-index:-1) is actually visible instead of being painted over
+    background-color: $color-background; // .atmosphere (which this was left transparent for) is currently disabled — see _theme-light.scss
 }
 
 p {

@@ -61,12 +61,19 @@ $color-tag-background: $blush !default;
 
 
 // Import sass partials (used in all themes)
+//
+// "atmosphere" (the animated blurred background) is deliberately left out
+// of this list rather than deleted — it's a real perf cost (a 90px CSS
+// filter: blur() over ~140% of the viewport, animated forever) on every
+// page. _atmosphere.scss itself is untouched, so restoring it later is
+// just adding "atmosphere" back to this list, undoing the
+// background-color revert in _base.scss below, and adding back
+// <div class="atmosphere"></div> to _layouts/default.html and home.html.
 @import
         "variables",
         "base",
         "components",
         "utilities",
         "cards",
-        "sections",
-        "atmosphere"
+        "sections"
 ;
