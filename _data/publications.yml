@@ -1,0 +1,46 @@
+# Two independent, optional link fields per entry:
+#   url        - makes the title itself a link (the paper/venue page,
+#                e.g. a DOI or arXiv link). Omit it and the title is
+#                plain, unlinked text.
+#   see_more   - adds a "see more" button linking to a fuller descriptive
+#                page (normally the matching /projects/<slug>/ entry).
+#                Omit it and no button renders.
+# Either can be a full external URL or a site-relative path. `status`
+# (published or in_progress) controls which subsection on /projects/ the
+# entry renders under.
+
+- title: "From Accuracy to Assurance: Toward Credible Power Grid Anomaly Detection"
+  authors: "E. Zhang, L. Ridley, M. Darling"
+  venue: "AAAI Fall Symposium Series - AI Trustworthiness and Risk Assessment for Challenged Contexts"
+  date: 2026
+  status: published
+
+- title: "Repairing Bugs with the Introduction of New Variables: A Multi-Agent Large Language Model"
+  authors: "E. Zhang, S. Sun, Y. Xing, K. Sun"
+  venue: "ACM Conference on Computer and Communications Security (CCS) - Poster Session"
+  date: 2024
+  status: published
+  url: https://dl.acm.org/doi/pdf/10.1145/3658644.3691412
+  see_more: /projects/program-repair/
+
+- title: "Exploring Security Commits In Python"
+  authors: "S. Sun, S. Wang, X. Wang, Y. Xing, E. Zhang, K. Sun"
+  venue: "IEEE International Conference on Software Maintenance and Evolution (ICSME)"
+  date: 2023
+  status: published
+  url: https://arxiv.org/abs/2307.11853
+  see_more: /projects/security-commits/
+
+- title: "A Two-Stage Pipeline for Generating Synthetic Malware Traces"
+  authors: "E. Hemphill, S. Rashid, I. Tenison, D.Rabbani, E. Zhang, S. Kalyan, L. Pellicer, E. Bollis, A. Gupta"
+  venue: "Neurocomputing (under review)"
+  date: 2026
+  status: in_progress
+  see_more: /projects/synthetic-malware/
+
+- title: "The AI Risk Mitigation Repository"
+  authors: "A. Saeri, K. Zhao, P. Slattery, M. Noetel, J. Graham, A. Liang, C. Simons, E. Zhang, F. Al Ghanamm, et al."
+  venue: "Preprint (in progress)"
+  date: 2026
+  status: in_progress
+  see_more: https://airisk.mit.edu

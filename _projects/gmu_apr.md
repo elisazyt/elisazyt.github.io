@@ -6,7 +6,13 @@ title: Multi-agent system for automated program repair
 workplace: George Mason University
 date_range: 12/2023-01/2025, 06/2025-07/2026
 categories: [research]
-description: Designed, implemented, tested, and containerized a multi-agent LLM system that automatically patches Java bugs. Agents are provided with various prompts and tools to explore the codebase via AST parsing, CPG-based static analysis, and lexical and semantic search. Implemented agent interactions and routing, memory management, and message handling using AutoGen. Presented first author poster at 2024 ACM CCS; 2025 Regeneron STS top 40 finalist; 2025 Davidson Fellows Scholarship honorable mention; code available on GitHub.
+description: |
+    Designed, implemented, tested, and containerized a multi-agent LLM system that automatically patches Java bugs. Agents are provided with various prompts and tools to explore the codebase via AST parsing, CPG-based static analysis, and lexical and semantic search. Implemented agent interactions and routing, memory management, and message handling using AutoGen.
+
+    *First-author poster at 2024 ACM CCS. Code available on GitHub.*
+    
+    ***2025 Regeneron STS top 40 finalist, 2025 Davidson Fellows Scholarship honorable mention.***
+
 primary_tags: [python]
 tags: [LLM agents, autogen, RAG, static analysis, joern, openai api, docker]
 ---

@@ -6,28 +6,52 @@ order: 2
 ---
 
 <div class="mb-2">
-  <h2 class="mt-0 awards-heading">Featured Projects and Publications</h2>
-  <div class="card-grid mb-4 py-1">
-    {% for slug in site.data.featured_projects %}
-      {% assign matches = site.projects | where_exp: "item", "item.path contains slug" %}
-      {% assign item = matches | first %}
-      {% if item %}
-      <a class="card no-underline card-featured" href="{{ item.url | prepend: site.baseurl }}">
-        <h3 class="mb-1">{{ item.title }}</h3>
-        <div class="card-featured-meta">
-          {% if item.workplace %}<div>{{ item.workplace }}</div>{% endif %}
-          {% if item.date_range %}<div>{{ item.date_range }}</div>{% endif %}
+  <h2 class="mt-0 awards-heading publications-heading">Publications</h2>
+
+  {% assign pub_statuses = "published,in_progress" | split: "," %}
+  {% assign pub_headings = "Published and Forthcoming,Under Review and In Progress" | split: "," %}
+  {% for status in pub_statuses %}
+  {% assign group_pubs = site.data.publications | where: "status", status %}
+  {% if group_pubs.size > 0 %}
+  <div class="publication-group">
+    <h3 class="mb-1">{{ pub_headings[forloop.index0] }}</h3>
+    <div class="publication-list">
+      {% for pub in group_pubs %}
+      <div class="publication-item{% if pub.see_more %} publication-item-clickable{% endif %}">
+        {% if pub.see_more %}
+        {% if pub.see_more contains "http" %}
+        <a class="publication-item-link" href="{{ pub.see_more }}" target="_blank" rel="noopener noreferrer" aria-label="See more: {{ pub.title }}"></a>
+        {% else %}
+        <a class="publication-item-link" href="{{ pub.see_more | prepend: site.baseurl }}" aria-label="See more: {{ pub.title }}"></a>
+        {% endif %}
+        {% endif %}
+        <div class="publication-header">
+          <span class="publication-title">
+            {% if pub.url %}
+              {% if pub.url contains "http" %}
+              <a class="publication-title-link" href="{{ pub.url }}" target="_blank" rel="noopener noreferrer">{{ pub.title }}</a>
+              {% else %}
+              <a class="publication-title-link" href="{{ pub.url | prepend: site.baseurl }}">{{ pub.title }}</a>
+              {% endif %}
+            {% else %}
+              {{ pub.title }}
+            {% endif %}
+          </span>
+          <span class="publication-year">{{ pub.date }}</span>
         </div>
-        <p class="card-description mb-1">{{ item.description }}</p>
-        <div class="tag-list">
-          {% for tag in item.primary_tags %}<span class="tag-primary">{{ tag }}</span>{% endfor %}
-          {% for tag in item.tags %}<span>{{ tag }}</span>{% endfor %}
+        <div class="publication-authors">{{ pub.authors | replace: "E. Zhang", "<strong>E. Zhang</strong>" }}</div>
+        <div class="publication-venue-row">
+          <span class="publication-venue">{{ pub.venue }}</span>
+          {% if pub.see_more %}
+          <span class="publication-see-more">see more <span class="timeline-see-more-arrow">&rarr;</span></span>
+          {% endif %}
         </div>
-        <span class="timeline-see-more card-featured-see-more">click to see more <span class="timeline-see-more-arrow">&rarr;</span></span>
-      </a>
-      {% endif %}
-    {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
   </div>
+  {% endif %}
+  {% endfor %}
 </div>
 
 <div class="mb-4">
@@ -73,7 +97,7 @@ order: 2
         <div class="tag-list">
           {% for tag in job.primary_tags %}<span class="tag-primary">{{ tag }}</span>{% endfor %}
           {% for tag in job.tags %}<span>{{ tag }}</span>{% endfor %}
-          {% if job.see_more or job.external_link %}<span class="timeline-see-more">click to see more &rarr;</span>{% endif %}
+          {% if job.see_more or job.external_link %}<span class="timeline-see-more">see more &rarr;</span>{% endif %}
         </div>
       {% if job.see_more or job.external_link %}
       </a>

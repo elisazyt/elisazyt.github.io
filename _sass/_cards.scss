@@ -195,6 +195,173 @@
   margin-top: $spacer-1 * 0.5;
 }
 
+// The "Publications" label itself — margin-bottom zeroed so the gap down
+// to the first group's subheading is set entirely by .publication-group's
+// own margin-top below, rather than adding on top of it (which would make
+// that first gap bigger than the gap between subsequent groups).
+.publications-heading {
+  margin-bottom: 0;
+}
+
+// Wraps each status group ("Published and Forthcoming" / "Under Review
+// and In Progress") under the "Publications" h2. margin-top (rather than
+// the previous group's margin-bottom) is what creates the gap both above
+// the first group and between groups, so both read as the same distance
+// — see .publications-heading and .publication-list's :last-child rule
+// below, which both zero out the margins that would otherwise stack on
+// top of this one.
+.publication-group {
+  margin-top: $spacer-2;
+
+  // Sized between .awards-heading (36px, the "Publications" label above)
+  // and the publication titles themselves (16px default), so the
+  // hierarchy reads label > subsection > entry.
+  h3 {
+    margin-top: 0;
+    font-size: 20px;
+  }
+}
+
+// Indented and set off with a left rule so it's visually clear which
+// entries belong under which subsection heading.
+.publication-list {
+  padding-left: $spacer-2;
+  border-left: 2px solid $color-border;
+}
+
+// A much fainter box than .card-featured — a barely-there tint and no
+// border/shadow/lift, so it doesn't compete for attention with the actual
+// Featured Projects cards. position: relative so .publication-item-link
+// (below) can stretch to cover it.
+.publication-item {
+  position: relative;
+  padding: $spacer-1 * 0.75;
+  border-radius: 4px;
+  background: rgba($color-border, 0.12);
+  margin-bottom: 2px;
+  transition: background 0.15s ease;
+
+  &:last-child {
+    // No trailing margin — the gap after a group is set by the next
+    // .publication-group's margin-top, not by this item's own spacing.
+    margin-bottom: 0;
+  }
+}
+
+// Only present when a publication has `see_more` — an invisible link
+// stretched over the whole item so clicking anywhere in the box
+// navigates, not just the visible "see more" text. Sits below the title
+// link in stacking order so a title with its own `url` remains
+// independently clickable on top of it.
+.publication-item-clickable:hover {
+  background: rgba($color-border, 0.24);
+}
+
+.publication-item-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  // Without this, the site's default `a { border-bottom: 1px solid
+  // currentColor }` (_base.scss) renders along the bottom edge of this
+  // element — which, since it's stretched via inset:0 to cover the whole
+  // box, shows up as a full-width line under the entire item. Only boxes
+  // with `see_more` get this element, which is why it was only ever
+  // visible on some entries.
+  border-bottom: none;
+}
+
+.publication-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: $spacer-2;
+}
+
+.publication-title {
+  color: $color-title;
+  font-weight: 600;
+}
+
+// Only rendered when a publication has a `url` — plain (non-link) text
+// otherwise. No underline override here on purpose — every publication
+// box should look the same regardless of whether its title happens to
+// link out, so this suppresses the site's default link underline
+// entirely rather than just recoloring it. position+z-index lift it
+// above .publication-item-link (the whole-box stretched link) so a title
+// with its own url stays independently clickable to that url, rather
+// than being swallowed by the box's own link to `see_more`.
+.publication-title-link {
+  position: relative;
+  z-index: 2;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: none;
+
+  &:hover {
+    color: $color-accent;
+  }
+}
+
+// Right-aligned per the header's space-between; nowrap so a 4-digit year
+// never wraps onto its own line at narrow widths.
+.publication-year {
+  color: $color-text-accent;
+  white-space: nowrap;
+}
+
+.publication-authors {
+  color: $color-body-text;
+  font-size: 15px;
+  margin-top: 1px;
+}
+
+// Venue and "see more" share a row — space-between puts "see more" flush
+// right, aligned with the venue instead of dropping to its own line.
+.publication-venue-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: $spacer-2;
+  margin-top: 1px;
+}
+
+.publication-venue {
+  font-style: italic;
+  color: $color-text-accent;
+  font-size: 14px;
+}
+
+// Matches the gray, uppercase "see more" treatment used elsewhere
+// (.timeline-see-more, .card-featured-see-more) — only rendered when a
+// publication has a `see_more` link (its own detail page), independent
+// of whether the title itself links out to `url` (the paper/venue).
+.publication-see-more {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: none;
+  color: #767676;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $color-accent;
+  }
+
+  // Also lights up when the whole box (not just this label) is hovered,
+  // since the box itself is the real link now.
+  .publication-item-clickable:hover & {
+    color: $color-accent;
+  }
+
+  &:hover .timeline-see-more-arrow,
+  .publication-item-clickable:hover & .timeline-see-more-arrow {
+    transform: translateX(4px);
+  }
+}
+
 .tag-list span {
   display: inline-block;
   font-size: 14px;
