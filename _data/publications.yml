@@ -14,6 +14,8 @@
   venue: "AAAI Fall Symposium Series - AI Trustworthiness and Risk Assessment for Challenged Contexts"
   date: 2026
   status: published
+  url: https://doi.org/10.1609/aaaiss.v10i1.43441
+  see_more: https://doi.org/10.1609/aaaiss.v10i1.43441
 
 - title: "Repairing Bugs with the Introduction of New Variables: A Multi-Agent Large Language Model"
   authors: "E. Zhang, S. Sun, Y. Xing, K. Sun"
