@@ -9,6 +9,13 @@
 # (published or in_progress) controls which subsection on /projects/ the
 # entry renders under.
 
+- title: "The AI Risk Mitigation Repository"
+  authors: "A. Saeri, K. Zhao, P. Slattery, M. Noetel, J. Graham, A. Liang, C. Simons, E. Zhang, F. Al Ghanamm, et al."
+  venue: "Nature Machine Intelligence (under review)"
+  date: 2026
+  status: in_progress
+  see_more: https://airisk.mit.edu
+
 - title: "From Accuracy to Assurance: Toward Credible Power Grid Anomaly Detection"
   authors: "E. Zhang, L. Ridley, M. Darling"
   venue: "AAAI Fall Symposium Series - AI Trustworthiness and Risk Assessment for Challenged Contexts"
@@ -39,10 +46,3 @@
   date: 2026
   status: in_progress
   see_more: /projects/synthetic-malware/
-
-- title: "The AI Risk Mitigation Repository"
-  authors: "A. Saeri, K. Zhao, P. Slattery, M. Noetel, J. Graham, A. Liang, C. Simons, E. Zhang, F. Al Ghanamm, et al."
-  venue: "Preprint (in progress)"
-  date: 2026
-  status: in_progress
-  see_more: https://airisk.mit.edu
